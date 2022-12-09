@@ -1,0 +1,15 @@
+Detecting CXX compiler ABI info failed to compile with the following output:
+Change Dir: /home/alumnos/a0405959/CAP2022/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake -f Makefile cmTC_b7e07/fast && gmake: *** No rule to make target 'cmTC_b7e07/fast'.  Stop.
+
+
+
+
+Determining if the CXX compiler works failed with the following output:
+Change Dir: /home/alumnos/a0405959/CAP2022/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake -f Makefile cmTC_d049e/fast && gmake: *** No hay ninguna regla para construir el objetivo 'cmTC_d049e/fast'.  Alto.
+
+
+

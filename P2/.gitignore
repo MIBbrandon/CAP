@@ -1,0 +1,11 @@
+/CMakeCache.txt
+/contrast
+/output.txt
+/results_file
+/utils
+/expected_output
+/in.pgm
+/in.ppm
+/out.pgm
+/out_yuv.ppm
+/out_hsl.ppm

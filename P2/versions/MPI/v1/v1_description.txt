@@ -1,0 +1,13 @@
+Descripción de la versión v1
+
+Es el primer intento de paralelizar con MPI. La idea principal es que en cada proceso, los píxeles se repartiesen equitativamente
+con el número de procesos (nunca se reparten tareas por canal, ya que siempre la conversión requiere información de otros canales,
+que puede ser muy costoso la transferencia de dicha información, y se dejará a resolver para OpenMP).
+
+A pesar de mostrar una clara mejora con más procesos en un solo nodo, para 2 y 4 nodos la situación empeora, pero para 6 nodos
+vuelve a mejorar la situación. Mi mejor sospecha es de que sea debido a si el número de píxeles se divide de manera fortuita entre
+los procesos y los nodos.
+
+La clara mejora a hacer para la siguiente versión es modificando las funciones de manera que no supongan que tienen la línea entera
+de píxeles, puesto que ahora mismo si lo suponen y por lo tanto es necesario hacer Allgatherv varias veces. Estos momentos de
+interdependencia deben ser eliminados al sustituir en las funciones la imagen completa por solo una sección.
