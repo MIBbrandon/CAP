@@ -1,0 +1,18 @@
+Descripción de la versión v2
+
+Basándose en v1, principalmente se mejora el hecho de que cada paso (principalmente en las de HSL y las YUV) las funciones
+dependían de haber leído todos de antemano img_in por completo (dicha lectura no está incluída en el tiempo, es necesario
+preguntar al profesor si debería estarlo, pues el código original no incluye esa sección). Ahora solamente el proceso
+de rank==0 es el que lee y reparte las secciones de la imagen inicial que les corresponde a los demás procesos (además de
+incluir el height y width de la imagen completa para que cada proceso pueda hacer los cálculos individuales). Noy hay más
+comunicación entre procesos excepto al crear el histograma (usando Gatherv para que rank==0 sume los histogramas para
+obtener el histograma completo y Bcast para que todos los procesos tengan una copia del histograma completo para sus
+cálculos) y al componer el resultado final (usando Gatherv en rank==0, por supuesto).
+
+Ignorando el gray_time que no presenta ninguna mejora con respecto a v1 (pues la intercomunicación entre procesos es casi
+igual), hay mejoras considerables al incrementar el número de procesos, especialmente para un solo nodo. Al incrementar el
+número de nodos, los tiempos vuelven a empeorar pero no tanto como en v1.
+
+No se ven posibles mejoras a esta versión desde la perspectiva de uso de MPI dado que la comunicación entre procesos ha sido
+reducida a lo esencial. Sin embargo, es posible que hayan mejoras de implementación de las funciones, especialmente la
+implementacion de rgb2hsl, pero ese nivel de detalle ya entraría en el campo de OpenMP.
