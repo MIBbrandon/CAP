@@ -2,7 +2,7 @@
 
 mpicc -o contrast *.cpp
 
-version="v1"
+version="v2"
 results_folder="versions/MPI/$version/results/"
 
 for num_nodes in 1 2 4 6

@@ -1,5 +1,5 @@
 CMakeFiles/contrast.dir/contrast-enhancement.cpp.o: \
- /home/alumnos/a0405959/LAB_DATA/CAP2022/contrast-enhancement.cpp \
+ /home/alumnos/a0405959/CAP/P2/contrast-enhancement.cpp \
  /usr/include/stdc-predef.h /usr/include/stdio.h \
  /usr/include/x86_64-linux-gnu/bits/libc-header-start.h \
  /usr/include/features.h /usr/include/x86_64-linux-gnu/sys/cdefs.h \
@@ -56,7 +56,7 @@ CMakeFiles/contrast.dir/contrast-enhancement.cpp.o: \
  /usr/include/x86_64-linux-gnu/bits/struct_rwlock.h /usr/include/alloca.h \
  /usr/include/x86_64-linux-gnu/bits/stdlib-float.h \
  /usr/include/c++/10/bits/std_abs.h \
- /home/alumnos/a0405959/LAB_DATA/CAP2022/hist-equ.h \
+ /home/alumnos/a0405959/CAP/P2/hist-equ.h \
  /usr/include/x86_64-linux-gnu/mpich/mpi.h /usr/include/c++/10/cstdint \
  /usr/lib/gcc/x86_64-linux-gnu/10/include/stdint.h /usr/include/stdint.h \
  /usr/include/x86_64-linux-gnu/bits/wchar.h \

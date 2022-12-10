@@ -53,10 +53,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/alumnos/a0405959/CAP2022
+CMAKE_SOURCE_DIR = /home/alumnos/a0405959/CAP/P2
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/alumnos/a0405959/CAP2022
+CMAKE_BINARY_DIR = /home/alumnos/a0405959/CAP/P2
 
 # Include any dependencies generated for this target.
 include CMakeFiles/contrast.dir/depend.make
@@ -72,58 +72,58 @@ include CMakeFiles/contrast.dir/flags.make
 CMakeFiles/contrast.dir/contrast-enhancement.cpp.o: CMakeFiles/contrast.dir/flags.make
 CMakeFiles/contrast.dir/contrast-enhancement.cpp.o: contrast-enhancement.cpp
 CMakeFiles/contrast.dir/contrast-enhancement.cpp.o: CMakeFiles/contrast.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/alumnos/a0405959/CAP2022/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/contrast.dir/contrast-enhancement.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/contrast.dir/contrast-enhancement.cpp.o -MF CMakeFiles/contrast.dir/contrast-enhancement.cpp.o.d -o CMakeFiles/contrast.dir/contrast-enhancement.cpp.o -c /home/alumnos/a0405959/CAP2022/contrast-enhancement.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/alumnos/a0405959/CAP/P2/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/contrast.dir/contrast-enhancement.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/contrast.dir/contrast-enhancement.cpp.o -MF CMakeFiles/contrast.dir/contrast-enhancement.cpp.o.d -o CMakeFiles/contrast.dir/contrast-enhancement.cpp.o -c /home/alumnos/a0405959/CAP/P2/contrast-enhancement.cpp
 
 CMakeFiles/contrast.dir/contrast-enhancement.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/contrast.dir/contrast-enhancement.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/alumnos/a0405959/CAP2022/contrast-enhancement.cpp > CMakeFiles/contrast.dir/contrast-enhancement.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/alumnos/a0405959/CAP/P2/contrast-enhancement.cpp > CMakeFiles/contrast.dir/contrast-enhancement.cpp.i
 
 CMakeFiles/contrast.dir/contrast-enhancement.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/contrast.dir/contrast-enhancement.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/alumnos/a0405959/CAP2022/contrast-enhancement.cpp -o CMakeFiles/contrast.dir/contrast-enhancement.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/alumnos/a0405959/CAP/P2/contrast-enhancement.cpp -o CMakeFiles/contrast.dir/contrast-enhancement.cpp.s
 
 CMakeFiles/contrast.dir/histogram-equalization.cpp.o: CMakeFiles/contrast.dir/flags.make
 CMakeFiles/contrast.dir/histogram-equalization.cpp.o: histogram-equalization.cpp
 CMakeFiles/contrast.dir/histogram-equalization.cpp.o: CMakeFiles/contrast.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/alumnos/a0405959/CAP2022/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/contrast.dir/histogram-equalization.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/contrast.dir/histogram-equalization.cpp.o -MF CMakeFiles/contrast.dir/histogram-equalization.cpp.o.d -o CMakeFiles/contrast.dir/histogram-equalization.cpp.o -c /home/alumnos/a0405959/CAP2022/histogram-equalization.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/alumnos/a0405959/CAP/P2/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/contrast.dir/histogram-equalization.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/contrast.dir/histogram-equalization.cpp.o -MF CMakeFiles/contrast.dir/histogram-equalization.cpp.o.d -o CMakeFiles/contrast.dir/histogram-equalization.cpp.o -c /home/alumnos/a0405959/CAP/P2/histogram-equalization.cpp
 
 CMakeFiles/contrast.dir/histogram-equalization.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/contrast.dir/histogram-equalization.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/alumnos/a0405959/CAP2022/histogram-equalization.cpp > CMakeFiles/contrast.dir/histogram-equalization.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/alumnos/a0405959/CAP/P2/histogram-equalization.cpp > CMakeFiles/contrast.dir/histogram-equalization.cpp.i
 
 CMakeFiles/contrast.dir/histogram-equalization.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/contrast.dir/histogram-equalization.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/alumnos/a0405959/CAP2022/histogram-equalization.cpp -o CMakeFiles/contrast.dir/histogram-equalization.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/alumnos/a0405959/CAP/P2/histogram-equalization.cpp -o CMakeFiles/contrast.dir/histogram-equalization.cpp.s
 
 CMakeFiles/contrast.dir/contrast-mpi.cpp.o: CMakeFiles/contrast.dir/flags.make
 CMakeFiles/contrast.dir/contrast-mpi.cpp.o: contrast-mpi.cpp
 CMakeFiles/contrast.dir/contrast-mpi.cpp.o: CMakeFiles/contrast.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/alumnos/a0405959/CAP2022/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/contrast.dir/contrast-mpi.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/contrast.dir/contrast-mpi.cpp.o -MF CMakeFiles/contrast.dir/contrast-mpi.cpp.o.d -o CMakeFiles/contrast.dir/contrast-mpi.cpp.o -c /home/alumnos/a0405959/CAP2022/contrast-mpi.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/alumnos/a0405959/CAP/P2/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/contrast.dir/contrast-mpi.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/contrast.dir/contrast-mpi.cpp.o -MF CMakeFiles/contrast.dir/contrast-mpi.cpp.o.d -o CMakeFiles/contrast.dir/contrast-mpi.cpp.o -c /home/alumnos/a0405959/CAP/P2/contrast-mpi.cpp
 
 CMakeFiles/contrast.dir/contrast-mpi.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/contrast.dir/contrast-mpi.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/alumnos/a0405959/CAP2022/contrast-mpi.cpp > CMakeFiles/contrast.dir/contrast-mpi.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/alumnos/a0405959/CAP/P2/contrast-mpi.cpp > CMakeFiles/contrast.dir/contrast-mpi.cpp.i
 
 CMakeFiles/contrast.dir/contrast-mpi.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/contrast.dir/contrast-mpi.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/alumnos/a0405959/CAP2022/contrast-mpi.cpp -o CMakeFiles/contrast.dir/contrast-mpi.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/alumnos/a0405959/CAP/P2/contrast-mpi.cpp -o CMakeFiles/contrast.dir/contrast-mpi.cpp.s
 
 CMakeFiles/contrast.dir/utils.cpp.o: CMakeFiles/contrast.dir/flags.make
 CMakeFiles/contrast.dir/utils.cpp.o: utils.cpp
 CMakeFiles/contrast.dir/utils.cpp.o: CMakeFiles/contrast.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/alumnos/a0405959/CAP2022/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/contrast.dir/utils.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/contrast.dir/utils.cpp.o -MF CMakeFiles/contrast.dir/utils.cpp.o.d -o CMakeFiles/contrast.dir/utils.cpp.o -c /home/alumnos/a0405959/CAP2022/utils.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/alumnos/a0405959/CAP/P2/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/contrast.dir/utils.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/contrast.dir/utils.cpp.o -MF CMakeFiles/contrast.dir/utils.cpp.o.d -o CMakeFiles/contrast.dir/utils.cpp.o -c /home/alumnos/a0405959/CAP/P2/utils.cpp
 
 CMakeFiles/contrast.dir/utils.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/contrast.dir/utils.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/alumnos/a0405959/CAP2022/utils.cpp > CMakeFiles/contrast.dir/utils.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/alumnos/a0405959/CAP/P2/utils.cpp > CMakeFiles/contrast.dir/utils.cpp.i
 
 CMakeFiles/contrast.dir/utils.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/contrast.dir/utils.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/alumnos/a0405959/CAP2022/utils.cpp -o CMakeFiles/contrast.dir/utils.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/alumnos/a0405959/CAP/P2/utils.cpp -o CMakeFiles/contrast.dir/utils.cpp.s
 
 # Object files for target contrast
 contrast_OBJECTS = \
@@ -143,7 +143,7 @@ contrast: CMakeFiles/contrast.dir/build.make
 contrast: /usr/lib/x86_64-linux-gnu/libmpichcxx.so
 contrast: /usr/lib/x86_64-linux-gnu/libmpich.so
 contrast: CMakeFiles/contrast.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/alumnos/a0405959/CAP2022/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Linking CXX executable contrast"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/alumnos/a0405959/CAP/P2/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Linking CXX executable contrast"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/contrast.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
@@ -155,6 +155,6 @@ CMakeFiles/contrast.dir/clean:
 .PHONY : CMakeFiles/contrast.dir/clean
 
 CMakeFiles/contrast.dir/depend:
-	cd /home/alumnos/a0405959/CAP2022 && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/alumnos/a0405959/CAP2022 /home/alumnos/a0405959/CAP2022 /home/alumnos/a0405959/CAP2022 /home/alumnos/a0405959/CAP2022 /home/alumnos/a0405959/CAP2022/CMakeFiles/contrast.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/alumnos/a0405959/CAP/P2 && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/alumnos/a0405959/CAP/P2 /home/alumnos/a0405959/CAP/P2 /home/alumnos/a0405959/CAP/P2 /home/alumnos/a0405959/CAP/P2 /home/alumnos/a0405959/CAP/P2/CMakeFiles/contrast.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/contrast.dir/depend
 

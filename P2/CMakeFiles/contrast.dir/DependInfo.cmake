@@ -8,10 +8,10 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "/home/alumnos/a0405959/CAP2022/contrast-enhancement.cpp" "CMakeFiles/contrast.dir/contrast-enhancement.cpp.o" "gcc" "CMakeFiles/contrast.dir/contrast-enhancement.cpp.o.d"
-  "/home/alumnos/a0405959/CAP2022/contrast-mpi.cpp" "CMakeFiles/contrast.dir/contrast-mpi.cpp.o" "gcc" "CMakeFiles/contrast.dir/contrast-mpi.cpp.o.d"
-  "/home/alumnos/a0405959/CAP2022/histogram-equalization.cpp" "CMakeFiles/contrast.dir/histogram-equalization.cpp.o" "gcc" "CMakeFiles/contrast.dir/histogram-equalization.cpp.o.d"
-  "/home/alumnos/a0405959/CAP2022/utils.cpp" "CMakeFiles/contrast.dir/utils.cpp.o" "gcc" "CMakeFiles/contrast.dir/utils.cpp.o.d"
+  "/home/alumnos/a0405959/CAP/P2/contrast-enhancement.cpp" "CMakeFiles/contrast.dir/contrast-enhancement.cpp.o" "gcc" "CMakeFiles/contrast.dir/contrast-enhancement.cpp.o.d"
+  "/home/alumnos/a0405959/CAP/P2/contrast-mpi.cpp" "CMakeFiles/contrast.dir/contrast-mpi.cpp.o" "gcc" "CMakeFiles/contrast.dir/contrast-mpi.cpp.o.d"
+  "/home/alumnos/a0405959/CAP/P2/histogram-equalization.cpp" "CMakeFiles/contrast.dir/histogram-equalization.cpp.o" "gcc" "CMakeFiles/contrast.dir/histogram-equalization.cpp.o.d"
+  "/home/alumnos/a0405959/CAP/P2/utils.cpp" "CMakeFiles/contrast.dir/utils.cpp.o" "gcc" "CMakeFiles/contrast.dir/utils.cpp.o.d"
   )
 
 # Targets to which this target links.

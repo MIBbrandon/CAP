@@ -1,5 +1,5 @@
 CMakeFiles/contrast.dir/contrast-mpi.cpp.o: \
- /home/alumnos/a0405959/LAB_DATA/CAP2022/contrast-mpi.cpp \
+ /home/alumnos/a0405959/CAP/P2/contrast-mpi.cpp \
  /usr/include/stdc-predef.h /usr/include/stdio.h \
  /usr/include/x86_64-linux-gnu/bits/libc-header-start.h \
  /usr/include/features.h /usr/include/x86_64-linux-gnu/sys/cdefs.h \
@@ -63,8 +63,8 @@ CMakeFiles/contrast.dir/contrast-mpi.cpp.o: \
  /usr/include/x86_64-linux-gnu/mpich/mpio.h \
  /usr/include/x86_64-linux-gnu/mpich/mpi.h \
  /usr/include/x86_64-linux-gnu/mpich/mpicxx.h \
- /home/alumnos/a0405959/LAB_DATA/CAP2022/hist-equ.h \
- /usr/include/c++/10/utility /usr/include/c++/10/bits/stl_relops.h \
+ /home/alumnos/a0405959/CAP/P2/hist-equ.h /usr/include/c++/10/utility \
+ /usr/include/c++/10/bits/stl_relops.h \
  /usr/include/c++/10/bits/stl_pair.h /usr/include/c++/10/bits/move.h \
  /usr/include/c++/10/type_traits /usr/include/c++/10/initializer_list \
  /usr/include/c++/10/fstream /usr/include/c++/10/istream \

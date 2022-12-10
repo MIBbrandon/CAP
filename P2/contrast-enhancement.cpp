@@ -6,6 +6,99 @@
 
 PGM_IMG contrast_enhancement_g(PGM_IMG img_in)
 {
+    // Suponemos que solo rank==0 tiene img_in bien
+    // Todos los procesos tienen img_h y img_w
+    
+    PGM_IMG result;
+    int hist[256];
+    int num_processors, rank;
+    int img_h, img_w;  // To be received by rank==0
+
+    MPI_Comm_size(MPI_COMM_WORLD, &num_processors);
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+
+    if (rank == 0) {
+        // Primero, rank==0 tiene que coger las dimensiones
+        img_h = img_in.h;
+        img_w = img_in.w;
+    }
+
+    // From rank==0, broadcast dimensions of the image
+    MPI_Bcast(&img_h, 1, MPI_INT, 0, MPI_COMM_WORLD);
+    MPI_Bcast(&img_w, 1, MPI_INT, 0, MPI_COMM_WORLD);
+
+    result.h = img_h;
+    result.w = img_w;
+
+    // Ahora es necesario que rank==0 reparta img_in
+    int * img_counts = (int *)malloc(num_processors * sizeof(int));  // Le dice a MPI cuántos elementos enivará a cada proceso
+    int * img_displs = (int *)malloc(num_processors * sizeof(int));  // Le dice a MPI donde en el array empezar a poner de cada proceso
+    int max_num_elements_in_subset_img = repartidor(img_h * img_w, num_processors, img_counts, img_displs);  // Repartimos
+    printf("R%d: w %d, h %d, np %d\n", rank, img_w, img_h, num_processors);
+
+    // Ya sabemos como repartir
+    // Cada proceso necesitará un array para coleccionar su subset de datos
+    unsigned char * subset_img = (unsigned char *)malloc(img_counts[rank] * sizeof(unsigned char));
+    unsigned char * subset_img_equalized = (unsigned char *)malloc(img_counts[rank] * sizeof(unsigned char));
+
+    // SCATTERV para histograma
+    // El rank==0 repartirá al resto de procesos lo que les corresponde
+    printf("R%d starting scatter 1\n", rank);
+    printf("senddispl0: %d, senddispl1: %d\n", img_displs[0], img_displs[1]);
+    printf("sendcount0: %d, sendcount1: %d\n", img_counts[0], img_counts[1]);
+    MPI_Scatterv(img_in.img, img_counts, img_displs, MPI_CHAR, subset_img, img_counts[rank], MPI_CHAR, 0, MPI_COMM_WORLD);
+    printf("R%d finished scatter 1\n", rank);
+
+    histogram(hist, subset_img, img_counts[rank], 256);  // Cada proceso crea un histograma de su subset
+
+    // Ahora bien, todos los procesos necesitan el histograma completo. Haremos que rank==0 los colleccione
+    unsigned int * all_hists = (unsigned int *)malloc(256 * num_processors * sizeof(unsigned int));
+    int * hist_counts = (int *)malloc(num_processors * sizeof(int));
+    int * hist_displs = (int *)malloc(num_processors * sizeof(int));  // Le dice a MPI donde en el array empezar a poner de cada proceso
+    for(int i = 0; i < num_processors; i++) {
+        hist_counts[i] = 256;
+        hist_displs[i] = 256 * i;
+    }
+
+    MPI_Gatherv(hist, 256, MPI_INT, all_hists, hist_counts, hist_displs, MPI_INT, 0, MPI_COMM_WORLD);
+
+    // Suma todos los histogramas
+    // Teniendo todos los histogramas en el mismo array, se pueden sumar elemento por elemento
+    for(int i = 0; i < 256; i++) {
+        hist[i] = 0;  // No se pierde el histograma de rank==0 porque está una copia en all_hists
+        for(int j = 0; j < num_processors; j++) {
+            hist[i] += all_hists[j * 256 + i];
+        }
+    }
+
+    // Con rank==0 teniendo hist completo, lo debe compartir con el resto de procesos
+    // MPI_Barrier(MPI_COMM_WORLD);
+    MPI_Bcast(&hist, 256, MPI_INT, 0, MPI_COMM_WORLD);
+
+    // Ahora se puede hacer la equalización
+    histogram_equalization_parallel(img_h * img_w, subset_img_equalized, subset_img, img_counts[rank], hist, 256);
+
+    // Habiendo hecho todos los procesos su equalización correspondiente, queremos combinarlas todas en un solo array en el proceso de rank==0
+    // Para ello, usaremos Gatherv
+    if (rank == 0) {
+        // Solo rank==0 necesitará alojar tanta memoria para recibir la imagen completa
+        result.img = (unsigned char *)malloc(result.w * result.h * sizeof(unsigned char));
+    }
+    MPI_Gatherv(subset_img_equalized, img_counts[rank], MPI_CHAR, result.img, img_counts, img_displs, MPI_CHAR, 0, MPI_COMM_WORLD);
+
+    // rank==0 ya tiene todos los pixeles en result.img, solo necesita devolver result
+    free(img_counts);
+    free(img_displs);
+    free(subset_img);
+    free(subset_img_equalized);
+    free(hist_counts);
+    free(hist_displs);
+    free(all_hists);
+    return result;
+}
+
+PGM_IMG contrast_enhancement_g_OLD(PGM_IMG img_in)
+{
     PGM_IMG result;
     int hist[256];
     int num_processors, rank;

@@ -22,9 +22,11 @@ int main(int argc, char *argv[]){
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     if (rank == 0) {
         printf("Running contrast enhancement for gray-scale images.\n");
+
+        // Solamente el proceso de rank==0 necesita leer
+        img_ibuf_g = read_pgm("in.pgm");
     }
     
-    img_ibuf_g = read_pgm("in.pgm");
     double gray_time = run_cpu_gray_test(img_ibuf_g);
     free_pgm(img_ibuf_g);
     
@@ -45,6 +47,8 @@ int main(int argc, char *argv[]){
 
 double run_cpu_gray_test(PGM_IMG img_in)
 {
+    // Suponemos que solo rank==0 tiene img_in
+
     PGM_IMG img_obuf;
     int rank;
 
@@ -64,9 +68,9 @@ double run_cpu_gray_test(PGM_IMG img_in)
 
     if (rank == 0) {
         write_pgm(img_obuf, "out.pgm");
+        free_pgm(img_obuf);
     }
     
-    free_pgm(img_obuf);
     return duration_grey;
 }
 
@@ -103,9 +107,9 @@ std::pair<double, double> run_cpu_color_test(PPM_IMG img_in)
     printf("YUV %d processing time: %f (s)\n", rank, duration_colour_yuv /* TIMER */);
     
     if (rank == 0) {
+        // Solamente el proceso de rank==0 necesita escribir
         write_ppm(img_obuf_yuv, "out_yuv.ppm");
     }
-    
     
     free_ppm(img_obuf_hsl);
     free_ppm(img_obuf_yuv);
