@@ -3,9 +3,9 @@
 make
 
 is_local=""
-category="MPI+OpenMP"
-version="v2.1${is_local}"
-results_folder="$PWD/versions/$category/$version/results"
+category="other"
+version="vX${is_local}"
+results_folder="$PWD/versions/$category/$version/results/"
 if [[ "$is_local" == "_local" ]]
 then
   for num_processes in {1..8}
@@ -29,16 +29,16 @@ else
   do
       for num_processes in {1..24}
       do
-          # # Usar este IF para saltar a un experimento en concreto
-          # if ((${num_nodes} < 6)) || ((${num_processes} < 23)); then
-          #     continue
-          # fi
-
-          # Usar este IF para parar en este experimento (NO incluido)
-          if ((${num_nodes} == 1)) && ((${num_processes} == 1)); then
-              echo "Parando en $num_nodes nodes y $num_processes processes"
-              exit 0
+          # Usar este IF para saltar a un experimento en concreto
+          if ((${num_nodes} < 6)) || ((${num_processes} < 21)); then
+              continue
           fi
+
+          # # Usar este IF para parar en este experimento (NO incluido)
+          # if ((${num_nodes} == 1)) && ((${num_processes} == 1)); then
+          #     echo "Parando en $num_nodes nodes y $num_processes processes"
+          #     exit 0
+          # fi
 
           if ((${num_processes} <= ${num_nodes} * 4)) && ((${num_processes} > (${num_nodes} - 1) * 4))
           then

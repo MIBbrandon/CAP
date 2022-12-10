@@ -28,7 +28,10 @@ int main(int argc, char *argv[]){
     }
     
     double gray_time = run_cpu_gray_test(img_ibuf_g);
-    free_pgm(img_ibuf_g);
+    if (rank == 0) {
+        free_pgm(img_ibuf_g);
+    }
+
     
     if (rank == 0) {
         printf("Running contrast enhancement for color images.\n");
