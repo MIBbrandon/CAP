@@ -32,13 +32,19 @@ int main(int argc, char *argv[]){
     
     if (rank == 0) {
         printf("Running contrast enhancement for color images.\n");
+
+        // Solamente el proceso de rank==0 necesita leer
+        img_ibuf_c = read_ppm("in.ppm");
     }
     
-    img_ibuf_c = read_ppm("in.ppm");
+    
     std::pair<double, double> colours_times = run_cpu_color_test(img_ibuf_c);
     double hsl_time = colours_times.first;
     double yuv_time = colours_times.second;
-    free_ppm(img_ibuf_c);
+    if (rank == 0) {
+        free_ppm(img_ibuf_c);
+    }
+    
     
     MPI_Finalize();
 
@@ -59,6 +65,7 @@ double run_cpu_gray_test(PGM_IMG img_in)
     }
     MPI_Barrier(MPI_COMM_WORLD);
     double start_grey = MPI_Wtime();
+    // Recuerda, solo rank==0 tiene img_in correcto
     img_obuf = contrast_enhancement_g(img_in);
     MPI_Barrier(MPI_COMM_WORLD);
     double end_grey = MPI_Wtime();
@@ -88,6 +95,7 @@ std::pair<double, double> run_cpu_color_test(PPM_IMG img_in)
     
     MPI_Barrier(MPI_COMM_WORLD);
     double start_colour_hsl = MPI_Wtime();
+    // Recuerda, solo rank==0 tiene img_in correcto
     img_obuf_hsl = contrast_enhancement_c_hsl(img_in);
     MPI_Barrier(MPI_COMM_WORLD);
     double end_colour_hsl = MPI_Wtime();
@@ -96,25 +104,26 @@ std::pair<double, double> run_cpu_color_test(PPM_IMG img_in)
     
     if (rank == 0) {
         write_ppm(img_obuf_hsl, "out_hsl.ppm");
+        free_ppm(img_obuf_hsl);
     }
     
     MPI_Barrier(MPI_COMM_WORLD);
-    double start_colour_yuv = MPI_Wtime();
-    img_obuf_yuv = contrast_enhancement_c_yuv(img_in);
-    MPI_Barrier(MPI_COMM_WORLD);
-    double end_colour_yuv = MPI_Wtime();
-    double duration_colour_yuv = end_colour_yuv - start_colour_yuv;
-    printf("YUV %d processing time: %f (s)\n", rank, duration_colour_yuv /* TIMER */);
+    // double start_colour_yuv = MPI_Wtime();
+    // // Recuerda, solo rank==0 tiene img_in correcto
+    // img_obuf_yuv = contrast_enhancement_c_yuv(img_in);
+    // MPI_Barrier(MPI_COMM_WORLD);
+    // double end_colour_yuv = MPI_Wtime();
+    // double duration_colour_yuv = end_colour_yuv - start_colour_yuv;
+    // printf("YUV %d processing time: %f (s)\n", rank, duration_colour_yuv /* TIMER */);
     
-    if (rank == 0) {
-        // Solamente el proceso de rank==0 necesita escribir
-        write_ppm(img_obuf_yuv, "out_yuv.ppm");
-    }
-    
-    free_ppm(img_obuf_hsl);
-    free_ppm(img_obuf_yuv);
+    // if (rank == 0) {
+    //     // Solamente el proceso de rank==0 necesita escribir
+    //     write_ppm(img_obuf_yuv, "out_yuv.ppm");
+    // }
+    // free_ppm(img_obuf_yuv);
 
-    return std::make_pair(duration_colour_hsl, duration_colour_yuv);
+    // return std::make_pair(duration_colour_hsl, duration_colour_yuv);
+    return std::make_pair(duration_colour_hsl, duration_colour_hsl);
 }
 
 
