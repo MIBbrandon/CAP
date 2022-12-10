@@ -1,5 +1,9 @@
 #!/bin/bash
-mpicc -o contrast *.cpp
-mpirun -n 1 ./contrast
 
-# srun -N 1 -n 4 ./contrast
+# Compilando con make y ejecutando con srun (o mpirun), obtenemos la mejor combinaciónde tiempos grey time y HSL time
+make
+srun -N 1 -n 4 ./contrast
+
+# Compilando con mpicc y ejecutando con srun (o mpirun), solo mejora la grey time, no la HSL time
+# mpicc -o contrast_mpicc *.cpp
+# mpirun -n 1 ./contrast_mpicc

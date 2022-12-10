@@ -1,0 +1,8 @@
+Descripción de la versión v2.1
+
+Basándose en v2 (MPI sin OpenMP), aplicamos #pragma omp for a todas las for-loops que hayan excepto a la for-loop que está
+en hsl2rgb, para la que usamos #pragma omp parallel for, pues reduce drásticamente el tiempo de ejecución desde 6 segundos
+a 4.3 segundos para un solo nodo y un solo proceso.
+
+Las posibles mejoras a esta versión es mayor atención al uso de OpenMP no solo para las for-loop sino para otras cosas
+como las if-branches, por ejemplo.
