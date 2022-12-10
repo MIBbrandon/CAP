@@ -50,8 +50,12 @@ void hsl2rgb(float * sub_img_h_vector, float * sub_img_s_vector, unsigned char *
                 unsigned char * sub_img_r_vector, unsigned char * sub_img_g_vector, unsigned char * sub_img_b_vector, 
                 int num_assigned_pixels, int img_h, int img_w);
 
-YUV_IMG rgb2yuv(PPM_IMG img_in);
-PPM_IMG yuv2rgb(YUV_IMG img_in);    
+void rgb2yuv(unsigned char * sub_img_r_vector, unsigned char * sub_img_g_vector, unsigned char * sub_img_b_vector, 
+                unsigned char * sub_img_y_vector, unsigned char * sub_img_u_vector, unsigned char * sub_img_v_vector, 
+                int num_assigned_pixels, int img_h, int img_w);
+void yuv2rgb(unsigned char * sub_img_y_vector, unsigned char * sub_img_u_vector, unsigned char * sub_img_v_vector,
+                unsigned char * sub_img_r_vector, unsigned char * sub_img_g_vector, unsigned char * sub_img_b_vector, 
+                int num_assigned_pixels, int img_h, int img_w);    
 
 // histogram-equalization.cpp
 void histogram(int * hist_out, unsigned char * img_in, int img_size, int nbr_bin);

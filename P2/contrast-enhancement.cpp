@@ -102,85 +102,126 @@ PPM_IMG contrast_enhancement_c_yuv(PPM_IMG img_in)
     unsigned char * y_equ;
     int hist[256];
     int num_processors, rank;
+    int img_h, img_w;  // To be received by rank==0
 
     MPI_Comm_size(MPI_COMM_WORLD, &num_processors);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    
-    yuv_med = rgb2yuv(img_in);
-    y_equ = (unsigned char *)malloc(yuv_med.h*yuv_med.w*sizeof(unsigned char));
 
-    // Repartimos el contar del histograma a todos los procesos por separado
-    // Para ello, primero determinamos como repartir la imagen
-    int * send_img_counts = (int *)malloc(num_processors * sizeof(int));  // Le dice a MPI cuántos elementos enivará a cada proceso
-    // Ya que sabemos como van a ser distribuidos los elementos, usamos MPI_Scatterv para adjudicar los datos
-    int * send_img_displs = (int *)malloc(num_processors * sizeof(int));  // Le dice a MPI donde en el array empezar a poner de cada proceso
-    for(int i = 0; i < num_processors; i++) {
-        send_img_displs[i] = 0;
+    if (rank == 0) {
+        // Primero, rank==0 tiene que coger las dimensiones
+        result.w = img_in.w;
+        result.h = img_in.h;
+        img_h = img_in.h;
+        img_w = img_in.w;
     }
-    // La función repartidor() rellena send_img_counts y send_img_displs con los valores adecuados para el Scatterv posterior
-    int num_elements_in_subset_img = repartidor(yuv_med.w * yuv_med.h, num_processors, send_img_counts, send_img_displs);
 
-    // Cada proceso necesitará un array para coleccionar su subset de datos
-    unsigned char * subset_img = (unsigned char *)malloc(send_img_counts[rank] * sizeof(unsigned char));
-    unsigned char * subset_img_equalized = (unsigned char *)malloc(send_img_counts[rank] * sizeof(unsigned char));
-
-    // -------------------- SECCIÓN PARALELA ----------------------------
-    // SCATTERV para histograma
-
-    // Si todos los procesos ya tienen img_in, no es necesario hacer Scatterv, solamente tienen que coger su trozo correspondiente de la imagen
-    memcpy(subset_img, yuv_med.img_y + send_img_displs[rank], send_img_counts[rank] * sizeof(unsigned char));
+    // From rank==0, broadcast dimensions of the image
+    MPI_Bcast(&img_h, 1, MPI_INT, 0, MPI_COMM_WORLD);
+    MPI_Bcast(&img_w, 1, MPI_INT, 0, MPI_COMM_WORLD);
     
-    histogram(hist, subset_img, send_img_counts[rank], 256);
+    // yuv_med = rgb2yuv(img_in);
+    // y_equ = (unsigned char *)malloc(yuv_med.h*yuv_med.w*sizeof(unsigned char));
+
+    // Primero determinamos como repartir la imagen
+    int * img_counts = (int *)malloc(num_processors * sizeof(int));  // Le dice a MPI cuántos elementos enivará a cada proceso
+    // Ya que sabemos como van a ser distribuidos los elementos, usamos MPI_Scatterv para adjudicar los datos
+    int * img_displs = (int *)malloc(num_processors * sizeof(int));  // Le dice a MPI donde en el array empezar a poner de cada proceso
+    for(int i = 0; i < num_processors; i++) {
+        img_displs[i] = 0;
+    }
+    // La función repartidor() rellena img_counts y img_displs con los valores adecuados para el Scatterv posterior
+    int num_elements_in_subset_img = repartidor(img_h * img_w, num_processors, img_counts, img_displs);
+
+    // Conociendo la distribución, rank==0 debe repartir
+    // Para repartir, todos los procesos tienen que tener la memoria adecuada preparada
+    // Vectores que guardan valores RGB
+    unsigned char * sub_img_r_vector = (unsigned char *)malloc(img_counts[rank] * sizeof(unsigned char));
+    unsigned char * sub_img_g_vector = (unsigned char *)malloc(img_counts[rank] * sizeof(unsigned char));
+    unsigned char * sub_img_b_vector = (unsigned char *)malloc(img_counts[rank] * sizeof(unsigned char));
+    // Vectores que guardan valores YUV
+    unsigned char * sub_img_y_vector = (unsigned char *)malloc(img_counts[rank] * sizeof(unsigned char));
+    unsigned char * sub_img_u_vector = (unsigned char *)malloc(img_counts[rank] * sizeof(unsigned char));
+    unsigned char * sub_img_v_vector = (unsigned char *)malloc(img_counts[rank] * sizeof(unsigned char));
+    // Se hará equalización del canal Y, y su resultado se guardará aquí
+    unsigned char * sub_img_y_vector_equ = (unsigned char *)malloc(img_counts[rank] * sizeof(unsigned char));
+
+    // El rank==0 repartirá al resto de procesos lo que les corresponde
+    // Solo hay que hacer scatter de los canales RGB
+    MPI_Scatterv(img_in.img_r, img_counts, img_displs, MPI_CHAR, sub_img_r_vector, img_counts[rank], MPI_CHAR, 0, MPI_COMM_WORLD);
+    MPI_Scatterv(img_in.img_g, img_counts, img_displs, MPI_CHAR, sub_img_g_vector, img_counts[rank], MPI_CHAR, 0, MPI_COMM_WORLD);
+    MPI_Scatterv(img_in.img_b, img_counts, img_displs, MPI_CHAR, sub_img_b_vector, img_counts[rank], MPI_CHAR, 0, MPI_COMM_WORLD);
+
+    // Cada proceso transforma su sección de la imagen de RGB a YUV
+    rgb2yuv(sub_img_r_vector, sub_img_g_vector, sub_img_b_vector, 
+            sub_img_y_vector, sub_img_u_vector, sub_img_v_vector, 
+            img_counts[rank], img_h, img_w);
+    
+    // Es necesario construir un histograma del canal Y
+    // Cada proceso hace su histograma individual
+    histogram(hist, sub_img_y_vector, img_counts[rank], 256);
 
     // Ahora es necesario sumar elemento por elemento los valores en los histogramas
     // Para ello, recolectamos los histogramas en el root
     unsigned int * all_hists = (unsigned int *)malloc(256 * num_processors * sizeof(unsigned int));
-    int * recv_hist_counts = (int *)malloc(num_processors * sizeof(int));
-    int * recv_hist_displs = (int *)malloc(num_processors * sizeof(int));  // Le dice a MPI donde en el array empezar a poner de cada proceso
+    int * hist_counts = (int *)malloc(num_processors * sizeof(int));
+    int * hist_displs = (int *)malloc(num_processors * sizeof(int));  // Le dice a MPI donde en el array empezar a poner de cada proceso
     for(int i = 0; i < num_processors; i++) {
-        recv_hist_counts[i] = 256;
-        recv_hist_displs[i] = 256 * i;
+        hist_counts[i] = 256;
+        hist_displs[i] = 256 * i;
     }
 
-    // ALLGATHERV para histograma, así todos los procesos tienen una copia del histograma completo
-    MPI_Allgatherv(hist, 256, MPI_INT, all_hists, recv_hist_counts, recv_hist_displs, MPI_INT, MPI_COMM_WORLD);
-    
+    // Proceso rank==0 coleccionará los histogramas individuales para hacer el histograma completo
+    MPI_Gatherv(hist, 256, MPI_INT, all_hists, hist_counts, hist_displs, MPI_INT, 0, MPI_COMM_WORLD);
 
-    // Todos los procesos tienen los histogramas de todos los demás
-    // Teniendo todos los histogramas en el mismo array, se pueden sumar elemento por elemento
-    for(int i = 0; i < 256; i++) {
-        hist[i] = 0;
-        for(int j = 0; j < num_processors; j++) {
-            hist[i] += all_hists[j * 256 + i];
+    // Solo rank==0 hace esta suma
+    if (rank == 0) {
+        for(int i = 0; i < 256; i++) {
+            hist[i] = 0;  // No se pierde el histograma de rank==0 porque está una copia en all_hists
+            for(int j = 0; j < num_processors; j++) {
+                hist[i] += all_hists[j * 256 + i];
+            }
         }
     }
 
-    // Al principio, cada proceso escribe su sección en su subset_img
-    // Obtenemos el offset de cada proceso
-    int corresponding_count = send_img_counts[rank];
+    // Con rank==0 teniendo hist completo, lo debe compartir con el resto de procesos
+    // MPI_Barrier(MPI_COMM_WORLD);
+    MPI_Bcast(&hist, 256, MPI_INT, 0, MPI_COMM_WORLD);
 
-    histogram_equalization_parallel(yuv_med.h * yuv_med.w, subset_img_equalized, subset_img, corresponding_count, hist, 256);
+    // printf("R%d: %d, %d\n", rank, hist[0], hist[1]);
 
-    // Sin embargo, queremos combinarlas todas en un solo array en el proceso de rank==0
-    // Para ello, usaremos Allgatherv (no solo Gatherv dado que el paso yuv2rgb supone que la imagen de entrada
-    // yuv_med ya está accesible en todos los procesos, y Gatherv solo haría que el proceso de rank==0 tenga y_equ
-    // completo)
-    MPI_Allgatherv(subset_img_equalized, corresponding_count, MPI_CHAR, y_equ, send_img_counts, send_img_displs, MPI_CHAR, MPI_COMM_WORLD);
+    // Ahora se puede hacer la equalización (de nuevo, cada proceso hace su parte individualmente)
+    histogram_equalization_parallel(img_h * img_w, sub_img_y_vector_equ, sub_img_y_vector, img_counts[rank], hist, 256);
 
-    free(yuv_med.img_y);
-    yuv_med.img_y = y_equ;
-    
-    result = yuv2rgb(yuv_med);
-    free(yuv_med.img_y);
-    free(yuv_med.img_u);
-    free(yuv_med.img_v);
-    
-    free(send_img_counts);
-    free(send_img_displs);
-    free(subset_img);
-    free(subset_img_equalized);
-    free(recv_hist_counts);
-    free(recv_hist_displs);
+    // Convertimos de nuevo a RGB, pero usando YUV con el canal Y equalizado
+    yuv2rgb(sub_img_y_vector_equ, sub_img_u_vector, sub_img_v_vector,
+                sub_img_r_vector, sub_img_g_vector, sub_img_b_vector, 
+                img_counts[rank], img_h, img_w);
+
+    if (rank == 0) {
+        // Solo rank==0 necesitará alojar tanta memoria para recibir la imagen completa
+        result.img_r = (unsigned char *)malloc(result.w * result.h * sizeof(unsigned char));
+        result.img_g = (unsigned char *)malloc(result.w * result.h * sizeof(unsigned char));
+        result.img_b = (unsigned char *)malloc(result.w * result.h * sizeof(unsigned char));
+    }
+
+    // Ya se han cumplido todos los pasos, rank==0 debe recoger todas las partes para producir el resultado completo deseado
+    MPI_Gatherv(sub_img_r_vector, img_counts[rank], MPI_CHAR, result.img_r, img_counts, img_displs, MPI_CHAR, 0, MPI_COMM_WORLD);
+    MPI_Gatherv(sub_img_g_vector, img_counts[rank], MPI_CHAR, result.img_g, img_counts, img_displs, MPI_CHAR, 0, MPI_COMM_WORLD);
+    MPI_Gatherv(sub_img_b_vector, img_counts[rank], MPI_CHAR, result.img_b, img_counts, img_displs, MPI_CHAR, 0, MPI_COMM_WORLD);
+
+    free(img_counts);
+    free(img_displs);
+
+    free(sub_img_r_vector);
+    free(sub_img_g_vector);
+    free(sub_img_b_vector);
+    free(sub_img_y_vector);
+    free(sub_img_y_vector_equ);
+    free(sub_img_u_vector);
+    free(sub_img_v_vector);
+
+    free(hist_counts);
+    free(hist_displs);
     free(all_hists);
     return result;
 }
@@ -236,10 +277,6 @@ PPM_IMG contrast_enhancement_c_hsl(PPM_IMG img_in)
 
     // El rank==0 repartirá al resto de procesos lo que les corresponde
     // Solo hay que hacer scatter de los canales RGB
-    if (rank == 0) {
-        // Solo rank==0 necesitará alojar tanta memoria para recibir la imagen completa
-        result.img_r = (unsigned char *)malloc(result.w * result.h * sizeof(unsigned char));
-    }
     MPI_Scatterv(img_in.img_r, img_counts, img_displs, MPI_CHAR, sub_img_r_vector, img_counts[rank], MPI_CHAR, 0, MPI_COMM_WORLD);
     MPI_Scatterv(img_in.img_g, img_counts, img_displs, MPI_CHAR, sub_img_g_vector, img_counts[rank], MPI_CHAR, 0, MPI_COMM_WORLD);
     MPI_Scatterv(img_in.img_b, img_counts, img_displs, MPI_CHAR, sub_img_b_vector, img_counts[rank], MPI_CHAR, 0, MPI_COMM_WORLD);
@@ -281,7 +318,7 @@ PPM_IMG contrast_enhancement_c_hsl(PPM_IMG img_in)
     // MPI_Barrier(MPI_COMM_WORLD);
     MPI_Bcast(&hist, 256, MPI_INT, 0, MPI_COMM_WORLD);
 
-    printf("R%d: %d, %d\n", rank, hist[0], hist[1]);
+    // printf("R%d: %d, %d\n", rank, hist[0], hist[1]);
 
     // Ahora se puede hacer la equalización (de nuevo, cada proceso hace su parte individualmente)
     histogram_equalization_parallel(img_h * img_w, sub_img_l_vector_equ, sub_img_l_vector, img_counts[rank], hist, 256);
@@ -298,7 +335,7 @@ PPM_IMG contrast_enhancement_c_hsl(PPM_IMG img_in)
         result.img_b = (unsigned char *)malloc(result.w * result.h * sizeof(unsigned char));
     }
 
-    // Ya se han cumplido todos los pasos, rank==0 debe recoger todas las partes para producir el resultado deseado
+    // Ya se han cumplido todos los pasos, rank==0 debe recoger todas las partes para producir el resultado completo deseado
     MPI_Gatherv(sub_img_r_vector, img_counts[rank], MPI_CHAR, result.img_r, img_counts, img_displs, MPI_CHAR, 0, MPI_COMM_WORLD);
     MPI_Gatherv(sub_img_g_vector, img_counts[rank], MPI_CHAR, result.img_g, img_counts, img_displs, MPI_CHAR, 0, MPI_COMM_WORLD);
     MPI_Gatherv(sub_img_b_vector, img_counts[rank], MPI_CHAR, result.img_b, img_counts, img_displs, MPI_CHAR, 0, MPI_COMM_WORLD);
@@ -450,72 +487,35 @@ void hsl2rgb(float * sub_img_h_vector, float * sub_img_s_vector, unsigned char *
 }
 
 //Convert RGB to YUV, all components in [0, 255]
-YUV_IMG rgb2yuv(PPM_IMG img_in)
+void rgb2yuv(unsigned char * sub_img_r_vector, unsigned char * sub_img_g_vector, unsigned char * sub_img_b_vector, 
+                unsigned char * sub_img_y_vector, unsigned char * sub_img_u_vector, unsigned char * sub_img_v_vector, 
+                int num_assigned_pixels, int img_h, int img_w)
 {
-    YUV_IMG img_out;
+    // Every process here is completely independent doing the same thing on different data (SIMD)
     int i;//, j;
     unsigned char r, g, b;
     unsigned char y, cb, cr;
-    int num_processors, rank;
-
-    MPI_Comm_size(MPI_COMM_WORLD, &num_processors);
-    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     
-    img_out.w = img_in.w;
-    img_out.h = img_in.h;
-    img_out.img_y = (unsigned char *)malloc(sizeof(unsigned char)*img_out.w*img_out.h);
-    img_out.img_u = (unsigned char *)malloc(sizeof(unsigned char)*img_out.w*img_out.h);
-    img_out.img_v = (unsigned char *)malloc(sizeof(unsigned char)*img_out.w*img_out.h);
-
-    // Repartimos los procesos a lo largo de la imagen, puesto que para cada canal en [y, u, v] es necesario
-    // tener información sobre todos los canales en [r, g, b]
-
-    // Para ello, primero determinamos como repartir la imagen
-    int * img_counts = (int *)malloc(num_processors * sizeof(int));  // Le dice a MPI cuántos elementos enivará a cada proceso
-    // Ya que sabemos como van a ser distribuidos los elementos, usamos MPI_Scatterv para adjudicar los datos
-    int * img_displs = (int *)malloc(num_processors * sizeof(int));  // Le dice a MPI donde en el array empezar a poner de cada proceso
-    for(int i = 0; i < num_processors; i++) {
-        img_displs[i] = 0;
-    }
-    // La función repartidor() rellena img_counts y img_displs con los valores adecuados para el Scatterv posterior
-    int num_elements_in_subset_img = repartidor(img_out.w * img_out.h, num_processors, img_counts, img_displs);
-
-    // Sabiendo la distribución, podemos preparar un buffer por cada canal para el Allgatherv posterior
-    unsigned char * sendbuf_y = (unsigned char *)malloc(img_counts[rank] * sizeof(unsigned char));
-    unsigned char * sendbuf_u = (unsigned char *)malloc(img_counts[rank] * sizeof(unsigned char));
-    unsigned char * sendbuf_v = (unsigned char *)malloc(img_counts[rank] * sizeof(unsigned char));
-
+    // Cada pixel i requiere información de su correspondiente [r, g, b] y por lo tanto
+    // los procesos se repartirán píxeles, no se repartirán tareas dentro de los píxeles.
+    
     // printf("RGB2YUV %d: disp %d, count %d\n", rank, img_displs[rank], img_counts[rank]);
 
     // Cada proceso hace su parte localmente
-    for(i = img_displs[rank]; i < img_displs[rank] + img_counts[rank]; i++){
+    for(i = 0; i < num_assigned_pixels; i++){
         // Todos los procesos tienen img_in ya en memoria con la lectura
-        r = img_in.img_r[i];
-        g = img_in.img_g[i];
-        b = img_in.img_b[i];
+        r = sub_img_r_vector[i];
+        g = sub_img_g_vector[i];
+        b = sub_img_b_vector[i];
         
         y  = (unsigned char)( 0.299*r + 0.587*g +  0.114*b);
         cb = (unsigned char)(-0.169*r - 0.331*g +  0.499*b + 128);
         cr = (unsigned char)( 0.499*r - 0.418*g - 0.0813*b + 128);
         
-        sendbuf_y[i - img_displs[rank]] = y;
-        sendbuf_u[i - img_displs[rank]] = cb;
-        sendbuf_v[i - img_displs[rank]] = cr;
+        sub_img_y_vector[i] = y;
+        sub_img_u_vector[i] = cb;
+        sub_img_v_vector[i] = cr;
     }
-
-    // Una vez todos los procesos hayan llenado sus buffers de sus secciones correspondientes,
-    // coleccionamos los resultados canal por canal
-    // Usamos Allgatherv para que cada proceso tenga la imagen completa, no solo el proceso de rank==0
-    MPI_Allgatherv(sendbuf_y, img_counts[rank], MPI_CHAR, img_out.img_y, img_counts, img_displs, MPI_CHAR, MPI_COMM_WORLD);
-    MPI_Allgatherv(sendbuf_u, img_counts[rank], MPI_CHAR, img_out.img_u, img_counts, img_displs, MPI_CHAR, MPI_COMM_WORLD);
-    MPI_Allgatherv(sendbuf_v, img_counts[rank], MPI_CHAR, img_out.img_v, img_counts, img_displs, MPI_CHAR, MPI_COMM_WORLD);
-    
-    free(img_counts);
-    free(img_displs);
-    free(sendbuf_y);
-    free(sendbuf_u);
-    free(sendbuf_v);
-    return img_out;
 }
 
 unsigned char clip_rgb(int x)
@@ -529,73 +529,32 @@ unsigned char clip_rgb(int x)
 }
 
 //Convert YUV to RGB, all components in [0, 255]
-PPM_IMG yuv2rgb(YUV_IMG img_in)
+void yuv2rgb(unsigned char * sub_img_y_vector, unsigned char * sub_img_u_vector, unsigned char * sub_img_v_vector,
+                unsigned char * sub_img_r_vector, unsigned char * sub_img_g_vector, unsigned char * sub_img_b_vector, 
+                int num_assigned_pixels, int img_h, int img_w)
 {
-    PPM_IMG img_out;
+    // Every process here is completely independent doing the same thing on different data (SIMD)
     int i;
     int rt, gt, bt;
     int y, cb, cr;
-    int num_processors, rank;
 
-    MPI_Comm_size(MPI_COMM_WORLD, &num_processors);
-    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    
-    img_out.w = img_in.w;
-    img_out.h = img_in.h;
-    img_out.img_r = (unsigned char *)malloc(sizeof(unsigned char)*img_out.w*img_out.h);
-    img_out.img_g = (unsigned char *)malloc(sizeof(unsigned char)*img_out.w*img_out.h);
-    img_out.img_b = (unsigned char *)malloc(sizeof(unsigned char)*img_out.w*img_out.h);
-
-    // Repartimos los procesos a lo largo de la imagen, puesto que para cada canal en [r, g, b] es necesario
-    // tener información sobre todos los canales en [y, u, v]
-
-    // Para ello, primero determinamos como repartir la imagen
-    int * img_counts = (int *)malloc(num_processors * sizeof(int));  // Le dice a MPI cuántos elementos enivará a cada proceso
-    // Ya que sabemos como van a ser distribuidos los elementos, usamos MPI_Scatterv para adjudicar los datos
-    int * img_displs = (int *)malloc(num_processors * sizeof(int));  // Le dice a MPI donde en el array empezar a poner de cada proceso
-    for(int i = 0; i < num_processors; i++) {
-        img_displs[i] = 0;
-    }
-    // La función repartidor() rellena img_counts y img_displs con los valores adecuados para el Scatterv posterior
-    int num_elements_in_subset_img = repartidor(img_out.w * img_out.h, num_processors, img_counts, img_displs);
-
-    // Sabiendo la distribución, podemos preparar un buffer por cada canal para el Allgatherv posterior
-    unsigned char * sendbuf_r = (unsigned char *)malloc(img_counts[rank] * sizeof(unsigned char));
-    unsigned char * sendbuf_g = (unsigned char *)malloc(img_counts[rank] * sizeof(unsigned char));
-    unsigned char * sendbuf_b = (unsigned char *)malloc(img_counts[rank] * sizeof(unsigned char));
+    // Cada pixel i requiere información de su correspondiente [r, g, b] y por lo tanto
+    // los procesos se repartirán píxeles, no se repartirán tareas dentro de los píxeles.
 
     // printf("YUV2RGB %d: disp %d, count %d\n", rank, img_displs[rank], img_counts[rank]);
     
-    for(i = img_displs[rank]; i < img_displs[rank] + img_counts[rank]; i++){
-        // Todos los procesos tienen img_in ya en memoria con la lectura
-        y  = (int)img_in.img_y[i];
-        cb = (int)img_in.img_u[i] - 128;
-        cr = (int)img_in.img_v[i] - 128;
+    // Cada proceso hace su parte localmente
+    for(i = 0; i < num_assigned_pixels; i++){
+        y  = (int)sub_img_y_vector[i];
+        cb = (int)sub_img_u_vector[i] - 128;
+        cr = (int)sub_img_v_vector[i] - 128;
 
         rt = (int)( y + 1.402*cr);
         gt = (int)( y - 0.344*cb - 0.714*cr);
         bt = (int)( y + 1.772*cb);
 
-        sendbuf_r[i - img_displs[rank]] = clip_rgb(rt);
-        sendbuf_g[i - img_displs[rank]] = clip_rgb(gt);
-        sendbuf_b[i - img_displs[rank]] = clip_rgb(bt);
-
+        sub_img_r_vector[i] = clip_rgb(rt);
+        sub_img_g_vector[i] = clip_rgb(gt);
+        sub_img_b_vector[i] = clip_rgb(bt);
     }
-    
-
-    // Una vez todos los procesos hayan llenado sus buffers de sus secciones correspondientes,
-    // coleccionamos los resultados canal por canal
-
-    // AVISO: este es el único paso donde hacemos Gatherv normal en vez de Allgatherv dado que este es el paso final, y solo el
-    // proceso de rank==0 escribirá el fichero de salida. 
-    MPI_Gatherv(sendbuf_r, img_counts[rank], MPI_CHAR, img_out.img_r, img_counts, img_displs, MPI_CHAR, 0, MPI_COMM_WORLD);
-    MPI_Gatherv(sendbuf_g, img_counts[rank], MPI_CHAR, img_out.img_g, img_counts, img_displs, MPI_CHAR, 0, MPI_COMM_WORLD);
-    MPI_Gatherv(sendbuf_b, img_counts[rank], MPI_CHAR, img_out.img_b, img_counts, img_displs, MPI_CHAR, 0, MPI_COMM_WORLD);
-
-    free(img_counts);
-    free(img_displs);
-    free(sendbuf_r);
-    free(sendbuf_g);
-    free(sendbuf_b);
-    return img_out;
 }
