@@ -24,8 +24,10 @@ PGM_IMG contrast_enhancement_g(PGM_IMG img_in)
     }
 
     // From rank==0, broadcast dimensions of the image
+    double g_broadcast_image_dimensions_start = MPI_Wtime();
     MPI_Bcast(&img_h, 1, MPI_INT, 0, MPI_COMM_WORLD);
     MPI_Bcast(&img_w, 1, MPI_INT, 0, MPI_COMM_WORLD);
+    double g_broadcast_image_dimensions_end = MPI_Wtime();
 
     result.h = img_h;
     result.w = img_w;
@@ -42,9 +44,14 @@ PGM_IMG contrast_enhancement_g(PGM_IMG img_in)
 
     // SCATTERV para histograma
     // El rank==0 repartirá al resto de procesos lo que les corresponde
+    double g_scatter_image_start = MPI_Wtime();
     MPI_Scatterv(img_in.img, img_counts, img_displs, MPI_CHAR, subset_img, img_counts[rank], MPI_CHAR, 0, MPI_COMM_WORLD);
+    double g_scatter_image_end = MPI_Wtime();
 
+
+    double g_partial_histogram_parallel_start = MPI_Wtime();
     histogram(hist, subset_img, img_counts[rank], 256);  // Cada proceso crea un histograma de su subset
+    double g_partial_histogram_parallel_end = MPI_Wtime();
 
     // Ahora bien, todos los procesos necesitan el histograma completo. Haremos que rank==0 los colleccione
     unsigned int * all_hists = (unsigned int *)malloc(256 * num_processors * sizeof(unsigned int));
@@ -55,8 +62,11 @@ PGM_IMG contrast_enhancement_g(PGM_IMG img_in)
         hist_displs[i] = 256 * i;
     }
 
+    double g_gather_hists_start = MPI_Wtime();
     MPI_Gatherv(hist, 256, MPI_INT, all_hists, hist_counts, hist_displs, MPI_INT, 0, MPI_COMM_WORLD);
+    double g_gather_hists_end = MPI_Wtime();
 
+    double g_add_hists_r0_start = MPI_Wtime();
     // Solo rank==0 hace esta suma
     if (rank == 0) {
         for(int i = 0; i < 256; i++) {
@@ -66,14 +76,19 @@ PGM_IMG contrast_enhancement_g(PGM_IMG img_in)
             }
         }
     }
+    double g_add_hists_r0_end = MPI_Wtime();
     
 
     // Con rank==0 teniendo hist completo, lo debe compartir con el resto de procesos
     // MPI_Barrier(MPI_COMM_WORLD);
+    double g_broadcast_done_hist_start = MPI_Wtime();
     MPI_Bcast(&hist, 256, MPI_INT, 0, MPI_COMM_WORLD);
+    double g_broadcast_done_hist_end = MPI_Wtime();
 
     // Ahora se puede hacer la equalización
+    double g_histogram_equ_parallel_start = MPI_Wtime();
     histogram_equalization_parallel(img_h * img_w, subset_img_equalized, subset_img, img_counts[rank], hist, 256);
+    double g_histogram_equ_parallel_end = MPI_Wtime();
 
     // Habiendo hecho todos los procesos su equalización correspondiente, queremos combinarlas todas en un solo array en el proceso de rank==0
     // Para ello, usaremos Gatherv
@@ -81,7 +96,33 @@ PGM_IMG contrast_enhancement_g(PGM_IMG img_in)
         // Solo rank==0 necesitará alojar tanta memoria para recibir la imagen completa
         result.img = (unsigned char *)malloc(result.w * result.h * sizeof(unsigned char));
     }
+
+    double g_gather_full_result_start = MPI_Wtime();
     MPI_Gatherv(subset_img_equalized, img_counts[rank], MPI_CHAR, result.img, img_counts, img_displs, MPI_CHAR, 0, MPI_COMM_WORLD);
+    double g_gather_full_result_end = MPI_Wtime();
+
+    if (rank == 0) {
+        printf("R%d grey: "
+                "\n\tbroadcast_image_dimensions: %f"
+                "\n\tscatter_image: %f"
+                "\n\tpartial_histogram_parallel: %f"
+                "\n\tgather_hists: %f"
+                "\n\tadd_hists_r0: %f"
+                "\n\tbroadcast_done_hist: %f"
+                "\n\thistogram_equ_parallel: %f"
+                "\n\tgather_full_result: %f"
+                "\n",
+                rank,
+                (g_broadcast_image_dimensions_end - g_broadcast_image_dimensions_start),
+                (g_scatter_image_end - g_scatter_image_start),
+                (g_partial_histogram_parallel_end - g_partial_histogram_parallel_start),
+                (g_gather_hists_end - g_gather_hists_start),
+                (g_add_hists_r0_end - g_add_hists_r0_start),
+                (g_broadcast_done_hist_end - g_broadcast_done_hist_start),
+                (g_histogram_equ_parallel_end - g_histogram_equ_parallel_start),
+                (g_gather_full_result_end - g_gather_full_result_start)
+                );
+    }
 
     // rank==0 ya tiene todos los pixeles en result.img, solo necesita devolver result
     free(img_counts);
