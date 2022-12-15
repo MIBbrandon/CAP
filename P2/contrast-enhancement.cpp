@@ -101,7 +101,7 @@ PGM_IMG contrast_enhancement_g(PGM_IMG img_in)
     MPI_Gatherv(subset_img_equalized, img_counts[rank], MPI_CHAR, result.img, img_counts, img_displs, MPI_CHAR, 0, MPI_COMM_WORLD);
     double g_gather_full_result_end = MPI_Wtime();
 
-    if (rank == 0) {
+    if (rank == 0 and false) { // false para controlar salida
         printf("R%d grey: "
                 "\n\tbroadcast_image_dimensions: %f"
                 "\n\tscatter_image: %f"
@@ -157,8 +157,10 @@ PPM_IMG contrast_enhancement_c_yuv(PPM_IMG img_in)
     }
 
     // From rank==0, broadcast dimensions of the image
+    double yuv_broadcast_image_dimensions_start = MPI_Wtime();
     MPI_Bcast(&img_h, 1, MPI_INT, 0, MPI_COMM_WORLD);
     MPI_Bcast(&img_w, 1, MPI_INT, 0, MPI_COMM_WORLD);
+    double yuv_broadcast_image_dimensions_end = MPI_Wtime();
     
     // yuv_med = rgb2yuv(img_in);
     // y_equ = (unsigned char *)malloc(yuv_med.h*yuv_med.w*sizeof(unsigned char));
@@ -188,18 +190,24 @@ PPM_IMG contrast_enhancement_c_yuv(PPM_IMG img_in)
 
     // El rank==0 repartirá al resto de procesos lo que les corresponde
     // Solo hay que hacer scatter de los canales RGB
+    double yuv_scatter_image_start = MPI_Wtime();
     MPI_Scatterv(img_in.img_r, img_counts, img_displs, MPI_CHAR, sub_img_r_vector, img_counts[rank], MPI_CHAR, 0, MPI_COMM_WORLD);
     MPI_Scatterv(img_in.img_g, img_counts, img_displs, MPI_CHAR, sub_img_g_vector, img_counts[rank], MPI_CHAR, 0, MPI_COMM_WORLD);
     MPI_Scatterv(img_in.img_b, img_counts, img_displs, MPI_CHAR, sub_img_b_vector, img_counts[rank], MPI_CHAR, 0, MPI_COMM_WORLD);
+    double yuv_scatter_image_end = MPI_Wtime();
 
     // Cada proceso transforma su sección de la imagen de RGB a YUV
+    double yuv_rgb2yuv_start = MPI_Wtime();
     rgb2yuv(sub_img_r_vector, sub_img_g_vector, sub_img_b_vector, 
             sub_img_y_vector, sub_img_u_vector, sub_img_v_vector, 
             img_counts[rank], img_h, img_w);
+    double yuv_rgb2yuv_end = MPI_Wtime();
     
     // Es necesario construir un histograma del canal Y
     // Cada proceso hace su histograma individual
+    double yuv_partial_histogram_parallel_start = MPI_Wtime();
     histogram(hist, sub_img_y_vector, img_counts[rank], 256);
+    double yuv_partial_histogram_parallel_end = MPI_Wtime();
 
     // Ahora es necesario sumar elemento por elemento los valores en los histogramas
     // Para ello, recolectamos los histogramas en el root
@@ -212,9 +220,12 @@ PPM_IMG contrast_enhancement_c_yuv(PPM_IMG img_in)
     }
 
     // Proceso rank==0 coleccionará los histogramas individuales para hacer el histograma completo
+    double yuv_gather_hists_start = MPI_Wtime();
     MPI_Gatherv(hist, 256, MPI_INT, all_hists, hist_counts, hist_displs, MPI_INT, 0, MPI_COMM_WORLD);
+    double yuv_gather_hists_end = MPI_Wtime();
 
     // Solo rank==0 hace esta suma
+    double yuv_add_hists_r0_start = MPI_Wtime();
     if (rank == 0) {
         #pragma omp for
         for(int i = 0; i < 256; i++) {
@@ -224,20 +235,27 @@ PPM_IMG contrast_enhancement_c_yuv(PPM_IMG img_in)
             }
         }
     }
+    double yuv_add_hists_r0_end = MPI_Wtime();
 
     // Con rank==0 teniendo hist completo, lo debe compartir con el resto de procesos
     // MPI_Barrier(MPI_COMM_WORLD);
+    double yuv_broadcast_done_hist_start = MPI_Wtime();
     MPI_Bcast(&hist, 256, MPI_INT, 0, MPI_COMM_WORLD);
+    double yuv_broadcast_done_hist_end = MPI_Wtime();
 
     // printf("R%d: %d, %d\n", rank, hist[0], hist[1]);
 
     // Ahora se puede hacer la equalización (de nuevo, cada proceso hace su parte individualmente)
+    double yuv_histogram_equ_parallel_start = MPI_Wtime();
     histogram_equalization_parallel(img_h * img_w, sub_img_y_vector_equ, sub_img_y_vector, img_counts[rank], hist, 256);
+    double yuv_histogram_equ_parallel_end = MPI_Wtime();
 
     // Convertimos de nuevo a RGB, pero usando YUV con el canal Y equalizado
+    double yuv_yuv2rgb_start = MPI_Wtime();
     yuv2rgb(sub_img_y_vector_equ, sub_img_u_vector, sub_img_v_vector,
                 sub_img_r_vector, sub_img_g_vector, sub_img_b_vector, 
                 img_counts[rank], img_h, img_w);
+    double yuv_yuv2rgb_end = MPI_Wtime();
 
     if (rank == 0) {
         // Solo rank==0 necesitará alojar tanta memoria para recibir la imagen completa
@@ -247,9 +265,38 @@ PPM_IMG contrast_enhancement_c_yuv(PPM_IMG img_in)
     }
 
     // Ya se han cumplido todos los pasos, rank==0 debe recoger todas las partes para producir el resultado completo deseado
+    double yuv_gather_full_result_start = MPI_Wtime();
     MPI_Gatherv(sub_img_r_vector, img_counts[rank], MPI_CHAR, result.img_r, img_counts, img_displs, MPI_CHAR, 0, MPI_COMM_WORLD);
     MPI_Gatherv(sub_img_g_vector, img_counts[rank], MPI_CHAR, result.img_g, img_counts, img_displs, MPI_CHAR, 0, MPI_COMM_WORLD);
     MPI_Gatherv(sub_img_b_vector, img_counts[rank], MPI_CHAR, result.img_b, img_counts, img_displs, MPI_CHAR, 0, MPI_COMM_WORLD);
+    double yuv_gather_full_result_end = MPI_Wtime();
+
+    if (rank == 0 and false) { // false para controlar salida
+        printf("R%d YUV: "
+                "\n\tbroadcast_image_dimensions: %f"
+                "\n\tscatter_image: %f"
+                "\n\trgb2yuv: %f"
+                "\n\tpartial_histogram_parallel: %f"
+                "\n\tgather_hists: %f"
+                "\n\tadd_hists_r0: %f"
+                "\n\tbroadcast_done_hist: %f"
+                "\n\thistogram_equ_parallel: %f"
+                "\n\tyuv2rgb: %f"
+                "\n\tgather_full_result: %f"
+                "\n",
+                rank,
+                (yuv_broadcast_image_dimensions_end - yuv_broadcast_image_dimensions_start),
+                (yuv_scatter_image_end - yuv_scatter_image_start),
+                (yuv_rgb2yuv_end - yuv_rgb2yuv_start),
+                (yuv_partial_histogram_parallel_end - yuv_partial_histogram_parallel_start),
+                (yuv_gather_hists_end - yuv_gather_hists_start),
+                (yuv_add_hists_r0_end - yuv_add_hists_r0_start),
+                (yuv_broadcast_done_hist_end - yuv_broadcast_done_hist_start),
+                (yuv_histogram_equ_parallel_end - yuv_histogram_equ_parallel_start),
+                (yuv_yuv2rgb_end - yuv_yuv2rgb_start),
+                (yuv_gather_full_result_end - yuv_gather_full_result_start)
+                );
+    }
 
     free(img_counts);
     free(img_displs);
@@ -288,8 +335,10 @@ PPM_IMG contrast_enhancement_c_hsl(PPM_IMG img_in)
     }
 
     // From rank==0, broadcast dimensions of the image
+    double hsl_broadcast_image_dimensions_start = MPI_Wtime();
     MPI_Bcast(&img_h, 1, MPI_INT, 0, MPI_COMM_WORLD);
     MPI_Bcast(&img_w, 1, MPI_INT, 0, MPI_COMM_WORLD);
+    double hsl_broadcast_image_dimensions_end = MPI_Wtime();
 
 
     // Primero determinamos como repartir la imagen
@@ -319,18 +368,25 @@ PPM_IMG contrast_enhancement_c_hsl(PPM_IMG img_in)
 
     // El rank==0 repartirá al resto de procesos lo que les corresponde
     // Solo hay que hacer scatter de los canales RGB
+    double hsl_scatter_image_start = MPI_Wtime();
     MPI_Scatterv(img_in.img_r, img_counts, img_displs, MPI_CHAR, sub_img_r_vector, img_counts[rank], MPI_CHAR, 0, MPI_COMM_WORLD);
     MPI_Scatterv(img_in.img_g, img_counts, img_displs, MPI_CHAR, sub_img_g_vector, img_counts[rank], MPI_CHAR, 0, MPI_COMM_WORLD);
     MPI_Scatterv(img_in.img_b, img_counts, img_displs, MPI_CHAR, sub_img_b_vector, img_counts[rank], MPI_CHAR, 0, MPI_COMM_WORLD);
+    double hsl_scatter_image_end = MPI_Wtime();
 
     // Cada proceso transforma su sección de la imagen de RGB a HSL
+    double hsl_rgb2hsl_start = MPI_Wtime();
     rgb2hsl(sub_img_r_vector, sub_img_g_vector, sub_img_b_vector, 
             sub_img_h_vector, sub_img_s_vector, sub_img_l_vector, 
             img_counts[rank], img_h, img_w);
+    double hsl_rgb2hsl_end = MPI_Wtime();
     
     // Es necesario construir un histograma del canal L
     // Cada proceso hace su histograma individual
+    double hsl_partial_histogram_parallel_start = MPI_Wtime();
     histogram(hist, sub_img_l_vector, img_counts[rank], 256);
+    double hsl_partial_histogram_parallel_end = MPI_Wtime();
+    
 
     // Ahora es necesario sumar elemento por elemento los valores en los histogramas
     // Para ello, recolectamos los histogramas en el root
@@ -343,9 +399,12 @@ PPM_IMG contrast_enhancement_c_hsl(PPM_IMG img_in)
     }
 
     // Proceso rank==0 coleccionará los histogramas individuales para hacer el histograma completo
+    double hsl_gather_hists_start = MPI_Wtime();
     MPI_Gatherv(hist, 256, MPI_INT, all_hists, hist_counts, hist_displs, MPI_INT, 0, MPI_COMM_WORLD);
+    double hsl_gather_hists_end = MPI_Wtime();
     
     // Solo rank==0 hace esta suma
+    double hsl_add_hists_r0_start = MPI_Wtime();
     if (rank == 0) {
         #pragma omp for
         for(int i = 0; i < 256; i++) {
@@ -355,20 +414,27 @@ PPM_IMG contrast_enhancement_c_hsl(PPM_IMG img_in)
             }
         }
     }
+    double hsl_add_hists_r0_end = MPI_Wtime();
 
     // Con rank==0 teniendo hist completo, lo debe compartir con el resto de procesos
     // MPI_Barrier(MPI_COMM_WORLD);
+    double hsl_broadcast_done_hist_start = MPI_Wtime();
     MPI_Bcast(&hist, 256, MPI_INT, 0, MPI_COMM_WORLD);
+    double hsl_broadcast_done_hist_end = MPI_Wtime();
 
     // printf("R%d: %d, %d\n", rank, hist[0], hist[1]);
 
     // Ahora se puede hacer la equalización (de nuevo, cada proceso hace su parte individualmente)
+    double hsl_histogram_equ_parallel_start = MPI_Wtime();
     histogram_equalization_parallel(img_h * img_w, sub_img_l_vector_equ, sub_img_l_vector, img_counts[rank], hist, 256);
+    double hsl_histogram_equ_parallel_end = MPI_Wtime();
     
     // Convertimos de nuevo a RGB, pero usando HSL con el canal L equalizado
+    double hsl_hsl2rgb_start = MPI_Wtime();
     hsl2rgb(sub_img_h_vector, sub_img_s_vector, sub_img_l_vector_equ,
                 sub_img_r_vector, sub_img_g_vector, sub_img_b_vector, 
                 img_counts[rank], img_h, img_w);
+    double hsl_hsl2rgb_end = MPI_Wtime();
 
     if (rank == 0) {
         // Solo rank==0 necesitará alojar tanta memoria para recibir la imagen completa
@@ -378,9 +444,38 @@ PPM_IMG contrast_enhancement_c_hsl(PPM_IMG img_in)
     }
 
     // Ya se han cumplido todos los pasos, rank==0 debe recoger todas las partes para producir el resultado completo deseado
+    double hsl_gather_full_result_start = MPI_Wtime();
     MPI_Gatherv(sub_img_r_vector, img_counts[rank], MPI_CHAR, result.img_r, img_counts, img_displs, MPI_CHAR, 0, MPI_COMM_WORLD);
     MPI_Gatherv(sub_img_g_vector, img_counts[rank], MPI_CHAR, result.img_g, img_counts, img_displs, MPI_CHAR, 0, MPI_COMM_WORLD);
     MPI_Gatherv(sub_img_b_vector, img_counts[rank], MPI_CHAR, result.img_b, img_counts, img_displs, MPI_CHAR, 0, MPI_COMM_WORLD);
+    double hsl_gather_full_result_end = MPI_Wtime();
+
+    if (rank == 0 and true) { // false para controlar salida
+        printf("R%d HSL: "
+                "\n\tbroadcast_image_dimensions: %f"
+                "\n\tscatter_image: %f"
+                "\n\trgb2hsl: %f"
+                "\n\tpartial_histogram_parallel: %f"
+                "\n\tgather_hists: %f"
+                "\n\tadd_hists_r0: %f"
+                "\n\tbroadcast_done_hist: %f"
+                "\n\thistogram_equ_parallel: %f"
+                "\n\thsl2rgb: %f"
+                "\n\tgather_full_result: %f"
+                "\n",
+                rank,
+                (hsl_broadcast_image_dimensions_end - hsl_broadcast_image_dimensions_start),
+                (hsl_scatter_image_end - hsl_scatter_image_start),
+                (hsl_rgb2hsl_end - hsl_rgb2hsl_start),
+                (hsl_partial_histogram_parallel_end - hsl_partial_histogram_parallel_start),
+                (hsl_gather_hists_end - hsl_gather_hists_start),
+                (hsl_add_hists_r0_end - hsl_add_hists_r0_start),
+                (hsl_broadcast_done_hist_end - hsl_broadcast_done_hist_start),
+                (hsl_histogram_equ_parallel_end - hsl_histogram_equ_parallel_start),
+                (hsl_hsl2rgb_end - hsl_hsl2rgb_start),
+                (hsl_gather_full_result_end - hsl_gather_full_result_start)
+                );
+    }
 
     free(img_counts);
     free(img_displs);
