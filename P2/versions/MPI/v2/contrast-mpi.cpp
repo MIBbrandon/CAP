@@ -21,6 +21,7 @@ int main(int argc, char *argv[]){
 
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     if (rank == 0) {
+        printf("VERSION 2\n");
         printf("Running contrast enhancement for gray-scale images.\n");
 
         // Solamente el proceso de rank==0 necesita leer

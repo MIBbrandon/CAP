@@ -63,7 +63,10 @@ CMAKE_BINARY_DIR = /home/alumnos/a0405959/CAP/P2
 # Directory level rules for the build root directory
 
 # The main recursive "all" target.
-all: CMakeFiles/contrast.dir/all
+all: CMakeFiles/contrast-times.dir/all
+all: CMakeFiles/contrast-mpi-v1.dir/all
+all: CMakeFiles/contrast-mpi.dir/all
+all: CMakeFiles/contrast-mpi-openmp.dir/all
 .PHONY : all
 
 # The main recursive "preinstall" target.
@@ -71,34 +74,115 @@ preinstall:
 .PHONY : preinstall
 
 # The main recursive "clean" target.
-clean: CMakeFiles/contrast.dir/clean
+clean: CMakeFiles/contrast-times.dir/clean
+clean: CMakeFiles/contrast-mpi-v1.dir/clean
+clean: CMakeFiles/contrast-mpi.dir/clean
+clean: CMakeFiles/contrast-mpi-openmp.dir/clean
 .PHONY : clean
 
 #=============================================================================
-# Target rules for target CMakeFiles/contrast.dir
+# Target rules for target CMakeFiles/contrast-times.dir
 
 # All Build rule for target.
-CMakeFiles/contrast.dir/all:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/contrast.dir/build.make CMakeFiles/contrast.dir/depend
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/contrast.dir/build.make CMakeFiles/contrast.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/alumnos/a0405959/CAP/P2/CMakeFiles --progress-num=1,2,3,4,5 "Built target contrast"
-.PHONY : CMakeFiles/contrast.dir/all
+CMakeFiles/contrast-times.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/contrast-times.dir/build.make CMakeFiles/contrast-times.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/contrast-times.dir/build.make CMakeFiles/contrast-times.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/alumnos/a0405959/CAP/P2/CMakeFiles --progress-num=16,17,18,19,20 "Built target contrast-times"
+.PHONY : CMakeFiles/contrast-times.dir/all
 
 # Build rule for subdir invocation for target.
-CMakeFiles/contrast.dir/rule: cmake_check_build_system
+CMakeFiles/contrast-times.dir/rule: cmake_check_build_system
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/alumnos/a0405959/CAP/P2/CMakeFiles 5
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/contrast.dir/all
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/contrast-times.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/alumnos/a0405959/CAP/P2/CMakeFiles 0
-.PHONY : CMakeFiles/contrast.dir/rule
+.PHONY : CMakeFiles/contrast-times.dir/rule
 
 # Convenience name for target.
-contrast: CMakeFiles/contrast.dir/rule
-.PHONY : contrast
+contrast-times: CMakeFiles/contrast-times.dir/rule
+.PHONY : contrast-times
 
 # clean rule for target.
-CMakeFiles/contrast.dir/clean:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/contrast.dir/build.make CMakeFiles/contrast.dir/clean
-.PHONY : CMakeFiles/contrast.dir/clean
+CMakeFiles/contrast-times.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/contrast-times.dir/build.make CMakeFiles/contrast-times.dir/clean
+.PHONY : CMakeFiles/contrast-times.dir/clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/contrast-mpi-v1.dir
+
+# All Build rule for target.
+CMakeFiles/contrast-mpi-v1.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/contrast-mpi-v1.dir/build.make CMakeFiles/contrast-mpi-v1.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/contrast-mpi-v1.dir/build.make CMakeFiles/contrast-mpi-v1.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/alumnos/a0405959/CAP/P2/CMakeFiles --progress-num=11,12,13,14,15 "Built target contrast-mpi-v1"
+.PHONY : CMakeFiles/contrast-mpi-v1.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/contrast-mpi-v1.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/alumnos/a0405959/CAP/P2/CMakeFiles 5
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/contrast-mpi-v1.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/alumnos/a0405959/CAP/P2/CMakeFiles 0
+.PHONY : CMakeFiles/contrast-mpi-v1.dir/rule
+
+# Convenience name for target.
+contrast-mpi-v1: CMakeFiles/contrast-mpi-v1.dir/rule
+.PHONY : contrast-mpi-v1
+
+# clean rule for target.
+CMakeFiles/contrast-mpi-v1.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/contrast-mpi-v1.dir/build.make CMakeFiles/contrast-mpi-v1.dir/clean
+.PHONY : CMakeFiles/contrast-mpi-v1.dir/clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/contrast-mpi.dir
+
+# All Build rule for target.
+CMakeFiles/contrast-mpi.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/contrast-mpi.dir/build.make CMakeFiles/contrast-mpi.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/contrast-mpi.dir/build.make CMakeFiles/contrast-mpi.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/alumnos/a0405959/CAP/P2/CMakeFiles --progress-num=1,2,3,4,5 "Built target contrast-mpi"
+.PHONY : CMakeFiles/contrast-mpi.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/contrast-mpi.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/alumnos/a0405959/CAP/P2/CMakeFiles 5
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/contrast-mpi.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/alumnos/a0405959/CAP/P2/CMakeFiles 0
+.PHONY : CMakeFiles/contrast-mpi.dir/rule
+
+# Convenience name for target.
+contrast-mpi: CMakeFiles/contrast-mpi.dir/rule
+.PHONY : contrast-mpi
+
+# clean rule for target.
+CMakeFiles/contrast-mpi.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/contrast-mpi.dir/build.make CMakeFiles/contrast-mpi.dir/clean
+.PHONY : CMakeFiles/contrast-mpi.dir/clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/contrast-mpi-openmp.dir
+
+# All Build rule for target.
+CMakeFiles/contrast-mpi-openmp.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/contrast-mpi-openmp.dir/build.make CMakeFiles/contrast-mpi-openmp.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/contrast-mpi-openmp.dir/build.make CMakeFiles/contrast-mpi-openmp.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/alumnos/a0405959/CAP/P2/CMakeFiles --progress-num=6,7,8,9,10 "Built target contrast-mpi-openmp"
+.PHONY : CMakeFiles/contrast-mpi-openmp.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/contrast-mpi-openmp.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/alumnos/a0405959/CAP/P2/CMakeFiles 5
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/contrast-mpi-openmp.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/alumnos/a0405959/CAP/P2/CMakeFiles 0
+.PHONY : CMakeFiles/contrast-mpi-openmp.dir/rule
+
+# Convenience name for target.
+contrast-mpi-openmp: CMakeFiles/contrast-mpi-openmp.dir/rule
+.PHONY : contrast-mpi-openmp
+
+# clean rule for target.
+CMakeFiles/contrast-mpi-openmp.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/contrast-mpi-openmp.dir/build.make CMakeFiles/contrast-mpi-openmp.dir/clean
+.PHONY : CMakeFiles/contrast-mpi-openmp.dir/clean
 
 #=============================================================================
 # Special targets to cleanup operation of make.

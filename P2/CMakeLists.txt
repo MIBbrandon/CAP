@@ -17,6 +17,16 @@ endif()
 
 include_directories(SYSTEM ${MPI_INCLUDE_PATH})
 
-add_executable(contrast contrast-enhancement.cpp histogram-equalization.cpp contrast-mpi.cpp utils.cpp)
+set(v1_dir "versions/MPI/v1/")
+set(v2_dir "versions/MPI/v2/")
+set(v2_1_dir "versions/MPI+OpenMP/v2.1/")
 
-target_link_libraries(contrast ${MPI_CXX_LIBRARIES})
+add_executable(contrast-times contrast-enhancement.cpp histogram-equalization.cpp contrast-mpi.cpp utils.cpp)
+add_executable(contrast-mpi-v1 ${v1_dir}contrast-enhancement.cpp ${v1_dir}histogram-equalization.cpp ${v1_dir}contrast-mpi.cpp ${v1_dir}utils.cpp)
+add_executable(contrast-mpi ${v2_dir}contrast-enhancement.cpp ${v2_dir}histogram-equalization.cpp ${v2_dir}contrast-mpi.cpp ${v2_dir}utils.cpp)
+add_executable(contrast-mpi-openmp ${v2_1_dir}contrast-enhancement.cpp ${v2_1_dir}histogram-equalization.cpp ${v2_1_dir}contrast-mpi-openmp.cpp ${v2_1_dir}utils.cpp)
+
+target_link_libraries(contrast-times ${MPI_CXX_LIBRARIES})
+target_link_libraries(contrast-mpi-v1 ${MPI_CXX_LIBRARIES})
+target_link_libraries(contrast-mpi ${MPI_CXX_LIBRARIES})
+target_link_libraries(contrast-mpi-openmp ${MPI_CXX_LIBRARIES})

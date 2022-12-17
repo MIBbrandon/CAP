@@ -1,3 +1,6 @@
-/home/alumnos/a0405959/CAP/P2/CMakeFiles/contrast.dir
+/home/alumnos/a0405959/CAP/P2/CMakeFiles/contrast-times.dir
+/home/alumnos/a0405959/CAP/P2/CMakeFiles/contrast-mpi-v1.dir
+/home/alumnos/a0405959/CAP/P2/CMakeFiles/contrast-mpi.dir
+/home/alumnos/a0405959/CAP/P2/CMakeFiles/contrast-mpi-openmp.dir
 /home/alumnos/a0405959/CAP/P2/CMakeFiles/edit_cache.dir
 /home/alumnos/a0405959/CAP/P2/CMakeFiles/rebuild_cache.dir

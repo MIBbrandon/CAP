@@ -117,24 +117,63 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named contrast
+# Target rules for targets named contrast-times
 
 # Build rule for target.
-contrast: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 contrast
-.PHONY : contrast
+contrast-times: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 contrast-times
+.PHONY : contrast-times
 
 # fast build rule for target.
-contrast/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/contrast.dir/build.make CMakeFiles/contrast.dir/build
-.PHONY : contrast/fast
+contrast-times/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/contrast-times.dir/build.make CMakeFiles/contrast-times.dir/build
+.PHONY : contrast-times/fast
+
+#=============================================================================
+# Target rules for targets named contrast-mpi-v1
+
+# Build rule for target.
+contrast-mpi-v1: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 contrast-mpi-v1
+.PHONY : contrast-mpi-v1
+
+# fast build rule for target.
+contrast-mpi-v1/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/contrast-mpi-v1.dir/build.make CMakeFiles/contrast-mpi-v1.dir/build
+.PHONY : contrast-mpi-v1/fast
+
+#=============================================================================
+# Target rules for targets named contrast-mpi
+
+# Build rule for target.
+contrast-mpi: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 contrast-mpi
+.PHONY : contrast-mpi
+
+# fast build rule for target.
+contrast-mpi/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/contrast-mpi.dir/build.make CMakeFiles/contrast-mpi.dir/build
+.PHONY : contrast-mpi/fast
+
+#=============================================================================
+# Target rules for targets named contrast-mpi-openmp
+
+# Build rule for target.
+contrast-mpi-openmp: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 contrast-mpi-openmp
+.PHONY : contrast-mpi-openmp
+
+# fast build rule for target.
+contrast-mpi-openmp/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/contrast-mpi-openmp.dir/build.make CMakeFiles/contrast-mpi-openmp.dir/build
+.PHONY : contrast-mpi-openmp/fast
 
 contrast-enhancement.o: contrast-enhancement.cpp.o
 .PHONY : contrast-enhancement.o
 
 # target to build an object file
 contrast-enhancement.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/contrast.dir/build.make CMakeFiles/contrast.dir/contrast-enhancement.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/contrast-times.dir/build.make CMakeFiles/contrast-times.dir/contrast-enhancement.cpp.o
 .PHONY : contrast-enhancement.cpp.o
 
 contrast-enhancement.i: contrast-enhancement.cpp.i
@@ -142,7 +181,7 @@ contrast-enhancement.i: contrast-enhancement.cpp.i
 
 # target to preprocess a source file
 contrast-enhancement.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/contrast.dir/build.make CMakeFiles/contrast.dir/contrast-enhancement.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/contrast-times.dir/build.make CMakeFiles/contrast-times.dir/contrast-enhancement.cpp.i
 .PHONY : contrast-enhancement.cpp.i
 
 contrast-enhancement.s: contrast-enhancement.cpp.s
@@ -150,7 +189,7 @@ contrast-enhancement.s: contrast-enhancement.cpp.s
 
 # target to generate assembly for a file
 contrast-enhancement.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/contrast.dir/build.make CMakeFiles/contrast.dir/contrast-enhancement.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/contrast-times.dir/build.make CMakeFiles/contrast-times.dir/contrast-enhancement.cpp.s
 .PHONY : contrast-enhancement.cpp.s
 
 contrast-mpi.o: contrast-mpi.cpp.o
@@ -158,7 +197,7 @@ contrast-mpi.o: contrast-mpi.cpp.o
 
 # target to build an object file
 contrast-mpi.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/contrast.dir/build.make CMakeFiles/contrast.dir/contrast-mpi.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/contrast-times.dir/build.make CMakeFiles/contrast-times.dir/contrast-mpi.cpp.o
 .PHONY : contrast-mpi.cpp.o
 
 contrast-mpi.i: contrast-mpi.cpp.i
@@ -166,7 +205,7 @@ contrast-mpi.i: contrast-mpi.cpp.i
 
 # target to preprocess a source file
 contrast-mpi.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/contrast.dir/build.make CMakeFiles/contrast.dir/contrast-mpi.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/contrast-times.dir/build.make CMakeFiles/contrast-times.dir/contrast-mpi.cpp.i
 .PHONY : contrast-mpi.cpp.i
 
 contrast-mpi.s: contrast-mpi.cpp.s
@@ -174,7 +213,7 @@ contrast-mpi.s: contrast-mpi.cpp.s
 
 # target to generate assembly for a file
 contrast-mpi.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/contrast.dir/build.make CMakeFiles/contrast.dir/contrast-mpi.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/contrast-times.dir/build.make CMakeFiles/contrast-times.dir/contrast-mpi.cpp.s
 .PHONY : contrast-mpi.cpp.s
 
 histogram-equalization.o: histogram-equalization.cpp.o
@@ -182,7 +221,7 @@ histogram-equalization.o: histogram-equalization.cpp.o
 
 # target to build an object file
 histogram-equalization.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/contrast.dir/build.make CMakeFiles/contrast.dir/histogram-equalization.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/contrast-times.dir/build.make CMakeFiles/contrast-times.dir/histogram-equalization.cpp.o
 .PHONY : histogram-equalization.cpp.o
 
 histogram-equalization.i: histogram-equalization.cpp.i
@@ -190,7 +229,7 @@ histogram-equalization.i: histogram-equalization.cpp.i
 
 # target to preprocess a source file
 histogram-equalization.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/contrast.dir/build.make CMakeFiles/contrast.dir/histogram-equalization.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/contrast-times.dir/build.make CMakeFiles/contrast-times.dir/histogram-equalization.cpp.i
 .PHONY : histogram-equalization.cpp.i
 
 histogram-equalization.s: histogram-equalization.cpp.s
@@ -198,7 +237,7 @@ histogram-equalization.s: histogram-equalization.cpp.s
 
 # target to generate assembly for a file
 histogram-equalization.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/contrast.dir/build.make CMakeFiles/contrast.dir/histogram-equalization.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/contrast-times.dir/build.make CMakeFiles/contrast-times.dir/histogram-equalization.cpp.s
 .PHONY : histogram-equalization.cpp.s
 
 utils.o: utils.cpp.o
@@ -206,7 +245,7 @@ utils.o: utils.cpp.o
 
 # target to build an object file
 utils.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/contrast.dir/build.make CMakeFiles/contrast.dir/utils.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/contrast-times.dir/build.make CMakeFiles/contrast-times.dir/utils.cpp.o
 .PHONY : utils.cpp.o
 
 utils.i: utils.cpp.i
@@ -214,7 +253,7 @@ utils.i: utils.cpp.i
 
 # target to preprocess a source file
 utils.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/contrast.dir/build.make CMakeFiles/contrast.dir/utils.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/contrast-times.dir/build.make CMakeFiles/contrast-times.dir/utils.cpp.i
 .PHONY : utils.cpp.i
 
 utils.s: utils.cpp.s
@@ -222,8 +261,296 @@ utils.s: utils.cpp.s
 
 # target to generate assembly for a file
 utils.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/contrast.dir/build.make CMakeFiles/contrast.dir/utils.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/contrast-times.dir/build.make CMakeFiles/contrast-times.dir/utils.cpp.s
 .PHONY : utils.cpp.s
+
+versions/MPI+OpenMP/v2.1/contrast-enhancement.o: versions/MPI+OpenMP/v2.1/contrast-enhancement.cpp.o
+.PHONY : versions/MPI+OpenMP/v2.1/contrast-enhancement.o
+
+# target to build an object file
+versions/MPI+OpenMP/v2.1/contrast-enhancement.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/contrast-mpi-openmp.dir/build.make CMakeFiles/contrast-mpi-openmp.dir/versions/MPI+OpenMP/v2.1/contrast-enhancement.cpp.o
+.PHONY : versions/MPI+OpenMP/v2.1/contrast-enhancement.cpp.o
+
+versions/MPI+OpenMP/v2.1/contrast-enhancement.i: versions/MPI+OpenMP/v2.1/contrast-enhancement.cpp.i
+.PHONY : versions/MPI+OpenMP/v2.1/contrast-enhancement.i
+
+# target to preprocess a source file
+versions/MPI+OpenMP/v2.1/contrast-enhancement.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/contrast-mpi-openmp.dir/build.make CMakeFiles/contrast-mpi-openmp.dir/versions/MPI+OpenMP/v2.1/contrast-enhancement.cpp.i
+.PHONY : versions/MPI+OpenMP/v2.1/contrast-enhancement.cpp.i
+
+versions/MPI+OpenMP/v2.1/contrast-enhancement.s: versions/MPI+OpenMP/v2.1/contrast-enhancement.cpp.s
+.PHONY : versions/MPI+OpenMP/v2.1/contrast-enhancement.s
+
+# target to generate assembly for a file
+versions/MPI+OpenMP/v2.1/contrast-enhancement.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/contrast-mpi-openmp.dir/build.make CMakeFiles/contrast-mpi-openmp.dir/versions/MPI+OpenMP/v2.1/contrast-enhancement.cpp.s
+.PHONY : versions/MPI+OpenMP/v2.1/contrast-enhancement.cpp.s
+
+versions/MPI+OpenMP/v2.1/contrast-mpi-openmp.o: versions/MPI+OpenMP/v2.1/contrast-mpi-openmp.cpp.o
+.PHONY : versions/MPI+OpenMP/v2.1/contrast-mpi-openmp.o
+
+# target to build an object file
+versions/MPI+OpenMP/v2.1/contrast-mpi-openmp.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/contrast-mpi-openmp.dir/build.make CMakeFiles/contrast-mpi-openmp.dir/versions/MPI+OpenMP/v2.1/contrast-mpi-openmp.cpp.o
+.PHONY : versions/MPI+OpenMP/v2.1/contrast-mpi-openmp.cpp.o
+
+versions/MPI+OpenMP/v2.1/contrast-mpi-openmp.i: versions/MPI+OpenMP/v2.1/contrast-mpi-openmp.cpp.i
+.PHONY : versions/MPI+OpenMP/v2.1/contrast-mpi-openmp.i
+
+# target to preprocess a source file
+versions/MPI+OpenMP/v2.1/contrast-mpi-openmp.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/contrast-mpi-openmp.dir/build.make CMakeFiles/contrast-mpi-openmp.dir/versions/MPI+OpenMP/v2.1/contrast-mpi-openmp.cpp.i
+.PHONY : versions/MPI+OpenMP/v2.1/contrast-mpi-openmp.cpp.i
+
+versions/MPI+OpenMP/v2.1/contrast-mpi-openmp.s: versions/MPI+OpenMP/v2.1/contrast-mpi-openmp.cpp.s
+.PHONY : versions/MPI+OpenMP/v2.1/contrast-mpi-openmp.s
+
+# target to generate assembly for a file
+versions/MPI+OpenMP/v2.1/contrast-mpi-openmp.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/contrast-mpi-openmp.dir/build.make CMakeFiles/contrast-mpi-openmp.dir/versions/MPI+OpenMP/v2.1/contrast-mpi-openmp.cpp.s
+.PHONY : versions/MPI+OpenMP/v2.1/contrast-mpi-openmp.cpp.s
+
+versions/MPI+OpenMP/v2.1/histogram-equalization.o: versions/MPI+OpenMP/v2.1/histogram-equalization.cpp.o
+.PHONY : versions/MPI+OpenMP/v2.1/histogram-equalization.o
+
+# target to build an object file
+versions/MPI+OpenMP/v2.1/histogram-equalization.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/contrast-mpi-openmp.dir/build.make CMakeFiles/contrast-mpi-openmp.dir/versions/MPI+OpenMP/v2.1/histogram-equalization.cpp.o
+.PHONY : versions/MPI+OpenMP/v2.1/histogram-equalization.cpp.o
+
+versions/MPI+OpenMP/v2.1/histogram-equalization.i: versions/MPI+OpenMP/v2.1/histogram-equalization.cpp.i
+.PHONY : versions/MPI+OpenMP/v2.1/histogram-equalization.i
+
+# target to preprocess a source file
+versions/MPI+OpenMP/v2.1/histogram-equalization.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/contrast-mpi-openmp.dir/build.make CMakeFiles/contrast-mpi-openmp.dir/versions/MPI+OpenMP/v2.1/histogram-equalization.cpp.i
+.PHONY : versions/MPI+OpenMP/v2.1/histogram-equalization.cpp.i
+
+versions/MPI+OpenMP/v2.1/histogram-equalization.s: versions/MPI+OpenMP/v2.1/histogram-equalization.cpp.s
+.PHONY : versions/MPI+OpenMP/v2.1/histogram-equalization.s
+
+# target to generate assembly for a file
+versions/MPI+OpenMP/v2.1/histogram-equalization.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/contrast-mpi-openmp.dir/build.make CMakeFiles/contrast-mpi-openmp.dir/versions/MPI+OpenMP/v2.1/histogram-equalization.cpp.s
+.PHONY : versions/MPI+OpenMP/v2.1/histogram-equalization.cpp.s
+
+versions/MPI+OpenMP/v2.1/utils.o: versions/MPI+OpenMP/v2.1/utils.cpp.o
+.PHONY : versions/MPI+OpenMP/v2.1/utils.o
+
+# target to build an object file
+versions/MPI+OpenMP/v2.1/utils.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/contrast-mpi-openmp.dir/build.make CMakeFiles/contrast-mpi-openmp.dir/versions/MPI+OpenMP/v2.1/utils.cpp.o
+.PHONY : versions/MPI+OpenMP/v2.1/utils.cpp.o
+
+versions/MPI+OpenMP/v2.1/utils.i: versions/MPI+OpenMP/v2.1/utils.cpp.i
+.PHONY : versions/MPI+OpenMP/v2.1/utils.i
+
+# target to preprocess a source file
+versions/MPI+OpenMP/v2.1/utils.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/contrast-mpi-openmp.dir/build.make CMakeFiles/contrast-mpi-openmp.dir/versions/MPI+OpenMP/v2.1/utils.cpp.i
+.PHONY : versions/MPI+OpenMP/v2.1/utils.cpp.i
+
+versions/MPI+OpenMP/v2.1/utils.s: versions/MPI+OpenMP/v2.1/utils.cpp.s
+.PHONY : versions/MPI+OpenMP/v2.1/utils.s
+
+# target to generate assembly for a file
+versions/MPI+OpenMP/v2.1/utils.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/contrast-mpi-openmp.dir/build.make CMakeFiles/contrast-mpi-openmp.dir/versions/MPI+OpenMP/v2.1/utils.cpp.s
+.PHONY : versions/MPI+OpenMP/v2.1/utils.cpp.s
+
+versions/MPI/v1/contrast-enhancement.o: versions/MPI/v1/contrast-enhancement.cpp.o
+.PHONY : versions/MPI/v1/contrast-enhancement.o
+
+# target to build an object file
+versions/MPI/v1/contrast-enhancement.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/contrast-mpi-v1.dir/build.make CMakeFiles/contrast-mpi-v1.dir/versions/MPI/v1/contrast-enhancement.cpp.o
+.PHONY : versions/MPI/v1/contrast-enhancement.cpp.o
+
+versions/MPI/v1/contrast-enhancement.i: versions/MPI/v1/contrast-enhancement.cpp.i
+.PHONY : versions/MPI/v1/contrast-enhancement.i
+
+# target to preprocess a source file
+versions/MPI/v1/contrast-enhancement.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/contrast-mpi-v1.dir/build.make CMakeFiles/contrast-mpi-v1.dir/versions/MPI/v1/contrast-enhancement.cpp.i
+.PHONY : versions/MPI/v1/contrast-enhancement.cpp.i
+
+versions/MPI/v1/contrast-enhancement.s: versions/MPI/v1/contrast-enhancement.cpp.s
+.PHONY : versions/MPI/v1/contrast-enhancement.s
+
+# target to generate assembly for a file
+versions/MPI/v1/contrast-enhancement.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/contrast-mpi-v1.dir/build.make CMakeFiles/contrast-mpi-v1.dir/versions/MPI/v1/contrast-enhancement.cpp.s
+.PHONY : versions/MPI/v1/contrast-enhancement.cpp.s
+
+versions/MPI/v1/contrast-mpi.o: versions/MPI/v1/contrast-mpi.cpp.o
+.PHONY : versions/MPI/v1/contrast-mpi.o
+
+# target to build an object file
+versions/MPI/v1/contrast-mpi.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/contrast-mpi-v1.dir/build.make CMakeFiles/contrast-mpi-v1.dir/versions/MPI/v1/contrast-mpi.cpp.o
+.PHONY : versions/MPI/v1/contrast-mpi.cpp.o
+
+versions/MPI/v1/contrast-mpi.i: versions/MPI/v1/contrast-mpi.cpp.i
+.PHONY : versions/MPI/v1/contrast-mpi.i
+
+# target to preprocess a source file
+versions/MPI/v1/contrast-mpi.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/contrast-mpi-v1.dir/build.make CMakeFiles/contrast-mpi-v1.dir/versions/MPI/v1/contrast-mpi.cpp.i
+.PHONY : versions/MPI/v1/contrast-mpi.cpp.i
+
+versions/MPI/v1/contrast-mpi.s: versions/MPI/v1/contrast-mpi.cpp.s
+.PHONY : versions/MPI/v1/contrast-mpi.s
+
+# target to generate assembly for a file
+versions/MPI/v1/contrast-mpi.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/contrast-mpi-v1.dir/build.make CMakeFiles/contrast-mpi-v1.dir/versions/MPI/v1/contrast-mpi.cpp.s
+.PHONY : versions/MPI/v1/contrast-mpi.cpp.s
+
+versions/MPI/v1/histogram-equalization.o: versions/MPI/v1/histogram-equalization.cpp.o
+.PHONY : versions/MPI/v1/histogram-equalization.o
+
+# target to build an object file
+versions/MPI/v1/histogram-equalization.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/contrast-mpi-v1.dir/build.make CMakeFiles/contrast-mpi-v1.dir/versions/MPI/v1/histogram-equalization.cpp.o
+.PHONY : versions/MPI/v1/histogram-equalization.cpp.o
+
+versions/MPI/v1/histogram-equalization.i: versions/MPI/v1/histogram-equalization.cpp.i
+.PHONY : versions/MPI/v1/histogram-equalization.i
+
+# target to preprocess a source file
+versions/MPI/v1/histogram-equalization.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/contrast-mpi-v1.dir/build.make CMakeFiles/contrast-mpi-v1.dir/versions/MPI/v1/histogram-equalization.cpp.i
+.PHONY : versions/MPI/v1/histogram-equalization.cpp.i
+
+versions/MPI/v1/histogram-equalization.s: versions/MPI/v1/histogram-equalization.cpp.s
+.PHONY : versions/MPI/v1/histogram-equalization.s
+
+# target to generate assembly for a file
+versions/MPI/v1/histogram-equalization.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/contrast-mpi-v1.dir/build.make CMakeFiles/contrast-mpi-v1.dir/versions/MPI/v1/histogram-equalization.cpp.s
+.PHONY : versions/MPI/v1/histogram-equalization.cpp.s
+
+versions/MPI/v1/utils.o: versions/MPI/v1/utils.cpp.o
+.PHONY : versions/MPI/v1/utils.o
+
+# target to build an object file
+versions/MPI/v1/utils.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/contrast-mpi-v1.dir/build.make CMakeFiles/contrast-mpi-v1.dir/versions/MPI/v1/utils.cpp.o
+.PHONY : versions/MPI/v1/utils.cpp.o
+
+versions/MPI/v1/utils.i: versions/MPI/v1/utils.cpp.i
+.PHONY : versions/MPI/v1/utils.i
+
+# target to preprocess a source file
+versions/MPI/v1/utils.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/contrast-mpi-v1.dir/build.make CMakeFiles/contrast-mpi-v1.dir/versions/MPI/v1/utils.cpp.i
+.PHONY : versions/MPI/v1/utils.cpp.i
+
+versions/MPI/v1/utils.s: versions/MPI/v1/utils.cpp.s
+.PHONY : versions/MPI/v1/utils.s
+
+# target to generate assembly for a file
+versions/MPI/v1/utils.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/contrast-mpi-v1.dir/build.make CMakeFiles/contrast-mpi-v1.dir/versions/MPI/v1/utils.cpp.s
+.PHONY : versions/MPI/v1/utils.cpp.s
+
+versions/MPI/v2/contrast-enhancement.o: versions/MPI/v2/contrast-enhancement.cpp.o
+.PHONY : versions/MPI/v2/contrast-enhancement.o
+
+# target to build an object file
+versions/MPI/v2/contrast-enhancement.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/contrast-mpi.dir/build.make CMakeFiles/contrast-mpi.dir/versions/MPI/v2/contrast-enhancement.cpp.o
+.PHONY : versions/MPI/v2/contrast-enhancement.cpp.o
+
+versions/MPI/v2/contrast-enhancement.i: versions/MPI/v2/contrast-enhancement.cpp.i
+.PHONY : versions/MPI/v2/contrast-enhancement.i
+
+# target to preprocess a source file
+versions/MPI/v2/contrast-enhancement.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/contrast-mpi.dir/build.make CMakeFiles/contrast-mpi.dir/versions/MPI/v2/contrast-enhancement.cpp.i
+.PHONY : versions/MPI/v2/contrast-enhancement.cpp.i
+
+versions/MPI/v2/contrast-enhancement.s: versions/MPI/v2/contrast-enhancement.cpp.s
+.PHONY : versions/MPI/v2/contrast-enhancement.s
+
+# target to generate assembly for a file
+versions/MPI/v2/contrast-enhancement.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/contrast-mpi.dir/build.make CMakeFiles/contrast-mpi.dir/versions/MPI/v2/contrast-enhancement.cpp.s
+.PHONY : versions/MPI/v2/contrast-enhancement.cpp.s
+
+versions/MPI/v2/contrast-mpi.o: versions/MPI/v2/contrast-mpi.cpp.o
+.PHONY : versions/MPI/v2/contrast-mpi.o
+
+# target to build an object file
+versions/MPI/v2/contrast-mpi.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/contrast-mpi.dir/build.make CMakeFiles/contrast-mpi.dir/versions/MPI/v2/contrast-mpi.cpp.o
+.PHONY : versions/MPI/v2/contrast-mpi.cpp.o
+
+versions/MPI/v2/contrast-mpi.i: versions/MPI/v2/contrast-mpi.cpp.i
+.PHONY : versions/MPI/v2/contrast-mpi.i
+
+# target to preprocess a source file
+versions/MPI/v2/contrast-mpi.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/contrast-mpi.dir/build.make CMakeFiles/contrast-mpi.dir/versions/MPI/v2/contrast-mpi.cpp.i
+.PHONY : versions/MPI/v2/contrast-mpi.cpp.i
+
+versions/MPI/v2/contrast-mpi.s: versions/MPI/v2/contrast-mpi.cpp.s
+.PHONY : versions/MPI/v2/contrast-mpi.s
+
+# target to generate assembly for a file
+versions/MPI/v2/contrast-mpi.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/contrast-mpi.dir/build.make CMakeFiles/contrast-mpi.dir/versions/MPI/v2/contrast-mpi.cpp.s
+.PHONY : versions/MPI/v2/contrast-mpi.cpp.s
+
+versions/MPI/v2/histogram-equalization.o: versions/MPI/v2/histogram-equalization.cpp.o
+.PHONY : versions/MPI/v2/histogram-equalization.o
+
+# target to build an object file
+versions/MPI/v2/histogram-equalization.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/contrast-mpi.dir/build.make CMakeFiles/contrast-mpi.dir/versions/MPI/v2/histogram-equalization.cpp.o
+.PHONY : versions/MPI/v2/histogram-equalization.cpp.o
+
+versions/MPI/v2/histogram-equalization.i: versions/MPI/v2/histogram-equalization.cpp.i
+.PHONY : versions/MPI/v2/histogram-equalization.i
+
+# target to preprocess a source file
+versions/MPI/v2/histogram-equalization.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/contrast-mpi.dir/build.make CMakeFiles/contrast-mpi.dir/versions/MPI/v2/histogram-equalization.cpp.i
+.PHONY : versions/MPI/v2/histogram-equalization.cpp.i
+
+versions/MPI/v2/histogram-equalization.s: versions/MPI/v2/histogram-equalization.cpp.s
+.PHONY : versions/MPI/v2/histogram-equalization.s
+
+# target to generate assembly for a file
+versions/MPI/v2/histogram-equalization.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/contrast-mpi.dir/build.make CMakeFiles/contrast-mpi.dir/versions/MPI/v2/histogram-equalization.cpp.s
+.PHONY : versions/MPI/v2/histogram-equalization.cpp.s
+
+versions/MPI/v2/utils.o: versions/MPI/v2/utils.cpp.o
+.PHONY : versions/MPI/v2/utils.o
+
+# target to build an object file
+versions/MPI/v2/utils.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/contrast-mpi.dir/build.make CMakeFiles/contrast-mpi.dir/versions/MPI/v2/utils.cpp.o
+.PHONY : versions/MPI/v2/utils.cpp.o
+
+versions/MPI/v2/utils.i: versions/MPI/v2/utils.cpp.i
+.PHONY : versions/MPI/v2/utils.i
+
+# target to preprocess a source file
+versions/MPI/v2/utils.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/contrast-mpi.dir/build.make CMakeFiles/contrast-mpi.dir/versions/MPI/v2/utils.cpp.i
+.PHONY : versions/MPI/v2/utils.cpp.i
+
+versions/MPI/v2/utils.s: versions/MPI/v2/utils.cpp.s
+.PHONY : versions/MPI/v2/utils.s
+
+# target to generate assembly for a file
+versions/MPI/v2/utils.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/contrast-mpi.dir/build.make CMakeFiles/contrast-mpi.dir/versions/MPI/v2/utils.cpp.s
+.PHONY : versions/MPI/v2/utils.cpp.s
 
 # Help Target
 help:
@@ -233,7 +560,10 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
-	@echo "... contrast"
+	@echo "... contrast-mpi"
+	@echo "... contrast-mpi-openmp"
+	@echo "... contrast-mpi-v1"
+	@echo "... contrast-times"
 	@echo "... contrast-enhancement.o"
 	@echo "... contrast-enhancement.i"
 	@echo "... contrast-enhancement.s"
@@ -246,6 +576,42 @@ help:
 	@echo "... utils.o"
 	@echo "... utils.i"
 	@echo "... utils.s"
+	@echo "... versions/MPI+OpenMP/v2.1/contrast-enhancement.o"
+	@echo "... versions/MPI+OpenMP/v2.1/contrast-enhancement.i"
+	@echo "... versions/MPI+OpenMP/v2.1/contrast-enhancement.s"
+	@echo "... versions/MPI+OpenMP/v2.1/contrast-mpi-openmp.o"
+	@echo "... versions/MPI+OpenMP/v2.1/contrast-mpi-openmp.i"
+	@echo "... versions/MPI+OpenMP/v2.1/contrast-mpi-openmp.s"
+	@echo "... versions/MPI+OpenMP/v2.1/histogram-equalization.o"
+	@echo "... versions/MPI+OpenMP/v2.1/histogram-equalization.i"
+	@echo "... versions/MPI+OpenMP/v2.1/histogram-equalization.s"
+	@echo "... versions/MPI+OpenMP/v2.1/utils.o"
+	@echo "... versions/MPI+OpenMP/v2.1/utils.i"
+	@echo "... versions/MPI+OpenMP/v2.1/utils.s"
+	@echo "... versions/MPI/v1/contrast-enhancement.o"
+	@echo "... versions/MPI/v1/contrast-enhancement.i"
+	@echo "... versions/MPI/v1/contrast-enhancement.s"
+	@echo "... versions/MPI/v1/contrast-mpi.o"
+	@echo "... versions/MPI/v1/contrast-mpi.i"
+	@echo "... versions/MPI/v1/contrast-mpi.s"
+	@echo "... versions/MPI/v1/histogram-equalization.o"
+	@echo "... versions/MPI/v1/histogram-equalization.i"
+	@echo "... versions/MPI/v1/histogram-equalization.s"
+	@echo "... versions/MPI/v1/utils.o"
+	@echo "... versions/MPI/v1/utils.i"
+	@echo "... versions/MPI/v1/utils.s"
+	@echo "... versions/MPI/v2/contrast-enhancement.o"
+	@echo "... versions/MPI/v2/contrast-enhancement.i"
+	@echo "... versions/MPI/v2/contrast-enhancement.s"
+	@echo "... versions/MPI/v2/contrast-mpi.o"
+	@echo "... versions/MPI/v2/contrast-mpi.i"
+	@echo "... versions/MPI/v2/contrast-mpi.s"
+	@echo "... versions/MPI/v2/histogram-equalization.o"
+	@echo "... versions/MPI/v2/histogram-equalization.i"
+	@echo "... versions/MPI/v2/histogram-equalization.s"
+	@echo "... versions/MPI/v2/utils.o"
+	@echo "... versions/MPI/v2/utils.i"
+	@echo "... versions/MPI/v2/utils.s"
 .PHONY : help
 
 
