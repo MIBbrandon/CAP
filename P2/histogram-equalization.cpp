@@ -48,6 +48,7 @@ void histogram_equalization_parallel(int img_out_size, unsigned char * subset_im
     // However, this goes over the entire image, so it is worth parallelizing
     /* Get the result image */
     // Each process does its own section, so they write the OUTPUT (not the input) at different places depending on their rank
+    #pragma omp for
     for(i = 0; i < subset_img_in_size; i++){
         subset_img_equalized[i] = (unsigned char)lut[subset_img_in[i]];
     }

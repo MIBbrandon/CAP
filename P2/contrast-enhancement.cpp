@@ -101,7 +101,7 @@ PGM_IMG contrast_enhancement_g(PGM_IMG img_in)
     MPI_Gatherv(subset_img_equalized, img_counts[rank], MPI_CHAR, result.img, img_counts, img_displs, MPI_CHAR, 0, MPI_COMM_WORLD);
     double g_gather_full_result_end = MPI_Wtime();
 
-    if (rank == 0 and false) { // false para controlar salida
+    if (rank == 0 and true) { // false para controlar salida
         printf("R%d grey: "
                 "\n\tbroadcast_image_dimensions: %f"
                 "\n\tscatter_image: %f"
@@ -271,7 +271,7 @@ PPM_IMG contrast_enhancement_c_yuv(PPM_IMG img_in)
     MPI_Gatherv(sub_img_b_vector, img_counts[rank], MPI_CHAR, result.img_b, img_counts, img_displs, MPI_CHAR, 0, MPI_COMM_WORLD);
     double yuv_gather_full_result_end = MPI_Wtime();
 
-    if (rank == 0 and false) { // false para controlar salida
+    if (rank == 0 and true) { // false para controlar salida
         printf("R%d YUV: "
                 "\n\tbroadcast_image_dimensions: %f"
                 "\n\tscatter_image: %f"
